@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            display: flex;
+            justify-content: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+        .box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        h2 { margin-bottom: 10px; }
+        h3 { margin-top: 20px; }
+        p { margin: 5px 0; }
+        ul { padding-left: 20px; }
+        .logout {
+            float: right;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="{{ url_for('logout_user') }}" class="logout">Logout</a>
+        <h2>Welcome, {{ data.name }}</h2>
+
+        <h3>Your Resume Summary</h3>
+        <div class="box">
+            <p><strong>Email:</strong> {{ data.email }}</p>
+            <p><strong>Skills:</strong> {{ data.skills }}</p>
+            <p><strong>Top Matched Jobs:</strong></p>
+            <ul>
+                {% for job in data.top_jobs.split(';') %}
+                    <li>{{ job.strip() }}</li>
+                {% endfor %}
+            </ul>
+            <p><strong>Last Submitted:</strong> {{ data.timestamp }}</p>
+        </div>
+    </div>
+</body>
+</html>

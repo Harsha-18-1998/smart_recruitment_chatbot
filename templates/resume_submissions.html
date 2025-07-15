@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Submissions</title>
+    <style>
+        body { font-family: Arial; margin: 40px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 20px; }
+        th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        a.button {
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            padding: 8px 14px;
+            border-radius: 5px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+        a.link {
+            display: inline-block;
+            margin-bottom: 10px;
+            color: blue;
+        }
+    </style>
+</head>
+<body>
+    <h2>Resume Submissions</h2>
+
+    <!-- 🔙 Back to admin -->
+    <a class="link" href="{{ url_for('admin_panel') }}">← Back to Admin Panel</a>
+
+    <!-- 📥 Download CSV -->
+    <a class="button" href="{{ url_for('download_resumes') }}">Download Submissions CSV</a>
+
+    {% if resumes %}
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Skills</th>
+            <th>Top Jobs</th>
+            <th>Submitted At</th>
+        </tr>
+        {% for r in resumes %}
+        <tr>
+            <td>{{ r.name }}</td>
+            <td>{{ r.email }}</td>
+            <td>{{ r.skills }}</td>
+            <td>{{ r.top_jobs }}</td>
+            <td>{{ r.timestamp }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+    <p>No submissions found.</p>
+    {% endif %}
+</body>
+</html>
