@@ -1,4 +1,4 @@
-from database.db_config import get_db_connection
+from shared.db_config import get_db_connection
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 from rapidfuzz import fuzz
