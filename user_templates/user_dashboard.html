@@ -7,21 +7,49 @@
 </head>
 <body class="bg-white">
 
+<!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Smart Recruit</a>
+    <a class="navbar-brand fw-bold" href="#">Smart Recruit</a>
     <div class="d-flex">
       <a class="btn btn-outline-danger" href="{{ url_for('logout') }}">Logout</a>
     </div>
   </div>
 </nav>
 
+<!-- Dashboard Container -->
 <div class="container mt-5">
-  <h2 class="mb-3">Welcome, {{ data.name }}</h2>
-  <p><strong>Email:</strong> {{ data.email }}</p>
-  <p><strong>Skills Extracted:</strong> {{ data.skills }}</p>
-  <p><strong>Top Matching Jobs:</strong> {{ data.top_jobs }}</p>
-  <p><strong>Submitted At:</strong> {{ data.timestamp }}</p>
+  <div class="card shadow rounded-3">
+    <div class="card-body">
+      <h2 class="mb-4">Welcome, {{ data.name }}</h2>
+      <p><strong>Email:</strong> {{ data.email }}</p>
+      <p><strong>Submitted At:</strong> {{ data.timestamp }}</p>
+
+      <hr>
+
+      <h4>📌 Skills Extracted</h4>
+      {% if data.skills %}
+        <ul>
+          {% for skill in data.skills.split(',') %}
+            <li>{{ skill.strip() }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No skills found.</p>
+      {% endif %}
+
+      <h4>🎯 Top Matching Jobs</h4>
+      {% if data.top_jobs %}
+        <ul>
+          {% for job in data.top_jobs.split(';') %}
+            <li>{{ job.strip() }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="text-muted">No job matches available.</p>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 </body>

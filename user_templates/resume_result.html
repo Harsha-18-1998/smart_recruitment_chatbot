@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Resume Analysis Result</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-light bg-white shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Smart Recruit</a>
+    <a class="btn btn-outline-danger" href="{{ url_for('logout') }}">Logout</a>
+  </div>
+</nav>
+
+<div class="container mt-5">
+  <h2 class="mb-4">Resume Analysis Result</h2>
+  <p><strong>Name:</strong> {{ name }}</p>
+  <p><strong>Email:</strong> {{ email }}</p>
+
+  <div class="mt-4">
+    <h5>Extracted Skills</h5>
+    <ul>
+      {% for skill in skills %}
+        <li>{{ skill }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="mt-4">
+    <h5>Top Matching Jobs</h5>
+    <ul>
+      {% for job in matches %}
+        <li><strong>{{ job.title }}</strong>: {{ job.description }} <br>
+        <span class="text-muted">Match Score: {{ job.score }}%</span></li>
+      {% endfor %}
+    </ul>
+  </div>
+
+  <div class="mt-4">
+    <a href="{{ url_for('user_dashboard') }}" class="btn btn-success me-2">Go to Dashboard</a>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Upload Again</a>
+  </div>
+</div>
+
+</body>
+</html>

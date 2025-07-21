@@ -7,6 +7,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 import os
 
+# ----------------- 🔧 CONFIG ------------------
+
 app = Flask(__name__, template_folder='user_templates')
 app.config['SECRET_KEY'] = 'your_secret_key_here'
 socketio = SocketIO(app)
@@ -16,6 +18,9 @@ socketio = SocketIO(app)
 @app.route('/')
 def index():
     return render_template('index.html')
+
+
+# ----------------- 🔐 AUTH ------------------
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -70,6 +75,9 @@ def logout():
     flash("Logged out successfully.")
     return redirect(url_for('login'))
 
+
+# ----------------- 📄 USER DASHBOARD ------------------
+
 @app.route('/dashboard')
 def user_dashboard():
     if 'user' not in session:
@@ -96,6 +104,9 @@ def user_dashboard():
 
     return render_template('user_dashboard.html', data=latest)
 
+
+# ----------------- 📤 RESUME UPLOAD ------------------
+
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume_form():
     if 'user' not in session:
@@ -105,6 +116,10 @@ def upload_resume_form():
         name = request.form['name']
         email = request.form['email']
         file = request.files['resume']
+
+        if not file or not name or not email:
+            flash("All fields are required.")
+            return redirect(url_for('upload_resume_form'))
 
         resume_text = file.read().decode('utf-8')
         skills = extract_skills(resume_text)
@@ -123,10 +138,17 @@ def upload_resume_form():
         cursor.close()
         conn.close()
 
-        flash("Resume uploaded and processed successfully.")
-        return redirect(url_for('user_dashboard'))
+        # Optional: show intermediate result screen
+        return render_template(
+            'resume_result.html',
+            name=name,
+            email=email,
+            skills=skills,
+            matches=matches
+        )
 
     return render_template('upload_resume.html')
+
 
 # ----------------- 💬 CHATBOT ------------------
 
@@ -136,7 +158,8 @@ def handle_user_message(data):
     bot_reply = get_job_info_reply(user_msg)
     emit('bot_reply', {'message': bot_reply})
 
-# ----------------- 🚀 MAIN ------------------
+
+# ----------------- 🚀 RUN ------------------
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
