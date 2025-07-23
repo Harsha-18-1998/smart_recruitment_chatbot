@@ -1,7 +1,30 @@
-<h2>Upload Your Resume</h2>
-<form method="post" enctype="multipart/form-data">
-  Name: <input name="name" required><br>
-  Email: <input name="email" required><br>
-  Resume (.txt): <input type="file" name="resume" accept=".txt" required><br>
-  <input type="submit" value="Upload">
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Upload Resume</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<div class="container mt-5 col-md-6">
+  <h3 class="mb-4 text-center">Upload Your Resume</h3>
+  <form method="POST" enctype="multipart/form-data">
+    <div class="mb-3">
+      <label for="name" class="form-label">Name</label>
+      <input type="text" class="form-control" name="name" required>
+    </div>
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" name="email" required>
+    </div>
+    <div class="mb-3">
+      <label for="resume" class="form-label">Resume (.txt)</label>
+      <input type="file" class="form-control" name="resume" accept=".txt" required>
+    </div>
+    <button type="submit" class="btn btn-primary w-100">Upload & Analyze</button>
+  </form>
+</div>
+
+</body>
+</html>

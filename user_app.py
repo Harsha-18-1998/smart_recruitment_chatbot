@@ -5,23 +5,18 @@ from shared.job_matcher import match_resume_to_jobs, get_job_info_reply
 from shared.db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-import os
-
-# ----------------- 🔧 CONFIG ------------------
 
 app = Flask(__name__, template_folder='user_templates')
 app.config['SECRET_KEY'] = 'your_secret_key_here'
 socketio = SocketIO(app)
 
-# ----------------- ✅ ROUTES ------------------
+# ----------------- ROUTES ------------------
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
-# ----------------- 🔐 AUTH ------------------
-
+# Signup
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -45,6 +40,7 @@ def signup():
 
     return render_template('signup.html')
 
+# Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -60,31 +56,29 @@ def login():
 
         if user and check_password_hash(user['password'], password):
             session['user'] = user['username']
-            session.permanent = True
             flash("Login successful.")
-            return redirect(url_for('user_dashboard'))
+            return redirect(url_for('upload_resume_form'))
         else:
             flash("Invalid credentials.")
             return redirect(url_for('login'))
 
     return render_template('login.html')
 
+# Logout
 @app.route('/logout')
 def logout():
     session.pop('user', None)
-    flash("Logged out successfully.")
+    flash("Logged out.")
     return redirect(url_for('login'))
 
-
-# ----------------- 📄 USER DASHBOARD ------------------
-
+# Dashboard
 @app.route('/dashboard')
 def user_dashboard():
     if 'user' not in session:
-        flash("Please log in first.")
+        flash("Login required.")
         return redirect(url_for('login'))
 
-    email = session['user']
+    user = session['user']
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
     cursor.execute("""
@@ -93,20 +87,18 @@ def user_dashboard():
         WHERE email = %s
         ORDER BY timestamp DESC
         LIMIT 1
-    """, (email,))
+    """, (user,))
     latest = cursor.fetchone()
     cursor.close()
     conn.close()
 
     if not latest:
-        flash("Please upload your resume first.")
+        flash("Please upload your resume.")
         return redirect(url_for('upload_resume_form'))
 
     return render_template('user_dashboard.html', data=latest)
 
-
-# ----------------- 📤 RESUME UPLOAD ------------------
-
+# Resume Upload
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume_form():
     if 'user' not in session:
@@ -117,9 +109,9 @@ def upload_resume_form():
         email = request.form['email']
         file = request.files['resume']
 
-        if not file or not name or not email:
-            flash("All fields are required.")
-            return redirect(url_for('upload_resume_form'))
+        if not file:
+            flash("Please upload a valid resume file.")
+            return redirect(url_for('user_dashboard'))
 
         resume_text = file.read().decode('utf-8')
         skills = extract_skills(resume_text)
@@ -128,6 +120,7 @@ def upload_resume_form():
         top_jobs = "; ".join([job['title'] for job in matches])
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+        # Save to DB
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
@@ -138,28 +131,27 @@ def upload_resume_form():
         cursor.close()
         conn.close()
 
-        # Optional: show intermediate result screen
-        return render_template(
-            'resume_result.html',
-            name=name,
-            email=email,
-            skills=skills,
-            matches=matches
-        )
+        # Prepare data for dashboard
+        data = {
+            'name': name,
+            'email': email,
+            'skills': ", ".join(skills),
+            'top_jobs': top_jobs,
+            'timestamp': timestamp
+        }
+
+        flash("Resume uploaded and processed successfully.")
+        return render_template('user_dashboard.html', data=data)
 
     return render_template('upload_resume.html')
 
-
-# ----------------- 💬 CHATBOT ------------------
-
+# Chatbot
 @socketio.on('user_message')
 def handle_user_message(data):
     user_msg = data['message']
     bot_reply = get_job_info_reply(user_msg)
     emit('bot_reply', {'message': bot_reply})
 
-
-# ----------------- 🚀 RUN ------------------
-
+# Run
 if __name__ == '__main__':
     socketio.run(app, debug=True)
