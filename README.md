@@ -8,3 +8,6 @@ An AI-powered recruitment assistant that allows users to upload resumes, match t
 - Admin panel with job CRUD operations
 - Real-time chatbot (Flask-SocketIO)
 - MySQL-based login for user and admin
+
+## for testing purpose
+ngrok http 5000 

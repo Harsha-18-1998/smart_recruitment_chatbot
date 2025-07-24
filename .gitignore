@@ -1,0 +1,38 @@
+# Python environment
+venv/
+.env
+*.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pyc
+
+# IDE/Editor settings
+.vscode/
+.idea/
+
+# MacOS & system files
+.DS_Store
+
+# Logs and debug files
+*.log
+
+# Flask instance folder (if any)
+instance/
+
+# Uploaded files (if not using cloud storage)
+uploads/
+
+# SocketIO temp files (if any)
+*.sock
+
+# Compiled files
+*.egg-info/
+dist/
+build/
+
+# Database credentials (optional)
+db_config.py

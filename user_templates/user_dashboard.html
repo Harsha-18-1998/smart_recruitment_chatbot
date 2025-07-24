@@ -15,14 +15,17 @@
       box-shadow: 0 0 10px rgba(0,0,0,0.1);
       padding: 15px;
       border-radius: 8px;
+      z-index: 999;
     }
     #messages {
       max-height: 200px;
       overflow-y: auto;
       margin-bottom: 10px;
+      font-size: 14px;
     }
     .message {
       margin-bottom: 5px;
+      line-height: 1.4;
     }
     .bot { color: #007bff; }
     .user { font-weight: bold; }
@@ -89,6 +92,7 @@
   {% endif %}
 </div>
 
+<!-- Chatbot Section -->
 <div id="chat-container">
   <div id="messages"></div>
   <input id="user-input" class="form-control" placeholder="Ask me anything...">

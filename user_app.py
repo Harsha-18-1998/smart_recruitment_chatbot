@@ -1,4 +1,4 @@
-import requests
+import os
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_socketio import SocketIO, emit
 from shared.resume_parser import extract_skills
@@ -6,10 +6,16 @@ from shared.job_matcher import match_resume_to_jobs
 from shared.db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from dotenv import load_dotenv
+import requests
+
+# Load .env variables securely
+load_dotenv()
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
 app = Flask(__name__, template_folder='user_templates')
 app.config['SECRET_KEY'] = 'your_secret_key_here'
-socketio = SocketIO(app)
+socketio = SocketIO(app, cors_allowed_origins="*")  # Support for ngrok URLs
 
 @app.route('/')
 def index():
@@ -137,40 +143,43 @@ def upload_resume_form():
 
     return render_template('upload_resume.html')
 
-# Chatbot Socket Handler
+
+# ✅ Chatbot handler using OpenRouter
 @socketio.on('user_message')
 def handle_user_message(json):
     user_input = json.get("message", "")
-    print("Received:", user_input)
-
-    headers = {
-        "Authorization": "Bearer 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",  # replace with real key
-        "Content-Type": "application/json"
-    }
-
-    payload = {
-        "model": "mistralai/mistral-7b-instruct",
-        "messages": [
-            {"role": "system", "content": "You are a helpful assistant for job seekers."},
-            {"role": "user", "content": user_input}
-        ]
-    }
+    print("User said:", user_input)
 
     try:
-        response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
-        print("API status:", response.status_code)
-        print("API response:", response.text)
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": "https://your-ngrok-url.ngrok-free.app",  # update with your actual URL
+                "X-Title": "SmartRecruitmentChatbot"
+            },
+            json={
+                "model": "meta-llama/llama-3-70b-instruct",
+               # "model":"openai/gpt-4",
+                "messages": [
+                    {"role": "system", "content": "You are a helpful assistant for job seekers."},
+                    {"role": "user", "content": user_input}
+                ]
+            }
+        )
 
         if response.status_code == 200:
             reply = response.json()["choices"][0]["message"]["content"]
         else:
-            reply = "Error: API returned " + str(response.status_code)
+            print("OpenRouter error:", response.text)
+            reply = f"Error: OpenRouter returned status {response.status_code}"
+
     except Exception as e:
-        reply = "Error talking to chatbot: " + str(e)
+        print("Chatbot error:", str(e))
+        reply = f"Error talking to chatbot: {str(e)}"
 
     emit("bot_reply", {"message": reply})
-
-
 
 if __name__ == '__main__':
     socketio.run(app, debug=True)
