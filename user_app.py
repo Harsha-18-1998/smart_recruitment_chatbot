@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_socketio import SocketIO, emit
 from shared.resume_parser import extract_skills
-from shared.job_matcher import match_resume_to_jobs, get_job_info_reply
+from shared.job_matcher import match_resume_to_jobs
+from shared.chatbot_engine import get_job_info_reply
 from shared.db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
