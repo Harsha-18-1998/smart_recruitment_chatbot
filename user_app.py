@@ -1,8 +1,8 @@
+import requests
 from flask import Flask, render_template, request, session, redirect, url_for, flash
 from flask_socketio import SocketIO, emit
 from shared.resume_parser import extract_skills
 from shared.job_matcher import match_resume_to_jobs
-from shared.chatbot_engine import get_job_info_reply
 from shared.db_config import get_db_connection
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -11,13 +11,10 @@ app = Flask(__name__, template_folder='user_templates')
 app.config['SECRET_KEY'] = 'your_secret_key_here'
 socketio = SocketIO(app)
 
-# ----------------- ROUTES ------------------
-
 @app.route('/')
 def index():
     return render_template('index.html')
 
-# Signup
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -41,7 +38,6 @@ def signup():
 
     return render_template('signup.html')
 
-# Login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -65,14 +61,12 @@ def login():
 
     return render_template('login.html')
 
-# Logout
 @app.route('/logout')
 def logout():
     session.pop('user', None)
     flash("Logged out.")
     return redirect(url_for('login'))
 
-# Dashboard
 @app.route('/dashboard')
 def user_dashboard():
     if 'user' not in session:
@@ -99,7 +93,6 @@ def user_dashboard():
 
     return render_template('user_dashboard.html', data=latest)
 
-# Resume Upload
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume_form():
     if 'user' not in session:
@@ -121,7 +114,6 @@ def upload_resume_form():
         top_jobs = "; ".join([job['title'] for job in matches])
         timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
-        # Save to DB
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("""
@@ -132,7 +124,6 @@ def upload_resume_form():
         cursor.close()
         conn.close()
 
-        # Prepare data for dashboard
         data = {
             'name': name,
             'email': email,
@@ -146,13 +137,40 @@ def upload_resume_form():
 
     return render_template('upload_resume.html')
 
-# Chatbot
+# Chatbot Socket Handler
 @socketio.on('user_message')
-def handle_user_message(data):
-    user_msg = data['message']
-    bot_reply = get_job_info_reply(user_msg)
-    emit('bot_reply', {'message': bot_reply})
+def handle_user_message(json):
+    user_input = json.get("message", "")
+    print("Received:", user_input)
 
-# Run
+    headers = {
+        "Authorization": "Bearer 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",  # replace with real key
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "model": "mistralai/mistral-7b-instruct",
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant for job seekers."},
+            {"role": "user", "content": user_input}
+        ]
+    }
+
+    try:
+        response = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=payload)
+        print("API status:", response.status_code)
+        print("API response:", response.text)
+
+        if response.status_code == 200:
+            reply = response.json()["choices"][0]["message"]["content"]
+        else:
+            reply = "Error: API returned " + str(response.status_code)
+    except Exception as e:
+        reply = "Error talking to chatbot: " + str(e)
+
+    emit("bot_reply", {"message": reply})
+
+
+
 if __name__ == '__main__':
     socketio.run(app, debug=True)

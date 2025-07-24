@@ -40,7 +40,6 @@
 <div class="container mt-5">
   <h3>Welcome, {{ session['user'] }}</h3>
 
-  <!-- Resume Upload Form -->
   <div class="card my-4">
     <div class="card-header">Upload Your Resume</div>
     <div class="card-body">
@@ -62,7 +61,6 @@
   </div>
 
   {% if data %}
-  <!-- Display Skills & Jobs -->
   <div class="row">
     <div class="col-md-6">
       <div class="card mb-3">
@@ -91,7 +89,6 @@
   {% endif %}
 </div>
 
-<!-- Chatbot UI -->
 <div id="chat-container">
   <div id="messages"></div>
   <input id="user-input" class="form-control" placeholder="Ask me anything...">
