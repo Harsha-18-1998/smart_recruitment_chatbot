@@ -156,7 +156,7 @@ def handle_user_message(json):
             headers={
                 "Authorization": f"Bearer {OPENROUTER_API_KEY}",
                 "Content-Type": "application/json",
-                "HTTP-Referer": "https://your-ngrok-url.ngrok-free.app",  # update with your actual URL
+                "HTTP-Referer": "https://1d7fb5704807.ngrok-free.app",  # update with your actual URL
                 "X-Title": "SmartRecruitmentChatbot"
             },
             json={
