@@ -8,6 +8,10 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from dotenv import load_dotenv
 import requests
+import nltk
+
+# 👇 Tell NLTK to look inside local project folder for downloaded data
+nltk.data.path.append(os.path.join(os.path.dirname(__file__), 'nltk_data'))
 
 # Load environment variables
 load_dotenv()
