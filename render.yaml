@@ -2,9 +2,9 @@ services:
   - type: web
     name: smart-recruitment-chatbot
     env: python
-    region: oregon
-    plan: free
-    buildCommand: pip install -r requirements.txt
+    buildCommand: |
+      pip install -r requirements.txt
+      python nltk_download.py
     startCommand: gunicorn user_app:app -c gunicorn_config.py
     envVars:
       - fromDotEnv: true

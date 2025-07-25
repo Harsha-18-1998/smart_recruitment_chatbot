@@ -9,19 +9,23 @@ from datetime import datetime
 from dotenv import load_dotenv
 import requests
 
-# Load .env variables
+# Load environment variables
 load_dotenv()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "defaultsecret")
 
-# Flask App Configuration
+# Flask App Setup
 app = Flask(__name__, template_folder='user_templates')
-app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY", "defaultsecret")
-socketio = SocketIO(app, cors_allowed_origins="*")
+app.config['SECRET_KEY'] = FLASK_SECRET_KEY
+
+# Use eventlet for production (Render needs async support)
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 # Routes
 @app.route('/')
 def index():
     return render_template('index.html')
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -45,6 +49,7 @@ def signup():
             conn.close()
     return render_template('signup.html')
 
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -67,11 +72,13 @@ def login():
             return redirect(url_for('login'))
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     session.pop('user', None)
     flash("Logged out.")
     return redirect(url_for('login'))
+
 
 @app.route('/dashboard')
 def user_dashboard():
@@ -98,6 +105,7 @@ def user_dashboard():
         return redirect(url_for('upload_resume_form'))
 
     return render_template('user_dashboard.html', data=latest)
+
 
 @app.route('/upload_resume', methods=['GET', 'POST'])
 def upload_resume_form():
@@ -143,7 +151,8 @@ def upload_resume_form():
 
     return render_template('upload_resume.html')
 
-# Chatbot via OpenRouter
+
+# WebSocket Chatbot Handler
 @socketio.on('user_message')
 def handle_user_message(json):
     user_input = json.get("message", "")
@@ -178,3 +187,11 @@ def handle_user_message(json):
         reply = f"Error talking to chatbot: {str(e)}"
 
     emit("bot_reply", {"message": reply})
+
+
+# Production Entrypoint
+if __name__ == "__main__":
+    import eventlet
+    import eventlet.wsgi
+    print("Starting socket-enabled Flask app with Eventlet...")
+    socketio.run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 10000)))
