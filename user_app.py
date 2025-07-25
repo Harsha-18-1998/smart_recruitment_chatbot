@@ -9,14 +9,16 @@ from datetime import datetime
 from dotenv import load_dotenv
 import requests
 
-# Load .env variables securely
+# Load .env variables
 load_dotenv()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
+# Flask App Configuration
 app = Flask(__name__, template_folder='user_templates')
-app.config['SECRET_KEY'] = 'your_secret_key_here'
-socketio = SocketIO(app, cors_allowed_origins="*")  # Support for ngrok URLs
+app.config['SECRET_KEY'] = os.getenv("FLASK_SECRET_KEY", "defaultsecret")
+socketio = SocketIO(app, cors_allowed_origins="*")
 
+# Routes
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -41,7 +43,6 @@ def signup():
         finally:
             cursor.close()
             conn.close()
-
     return render_template('signup.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -64,7 +65,6 @@ def login():
         else:
             flash("Invalid credentials.")
             return redirect(url_for('login'))
-
     return render_template('login.html')
 
 @app.route('/logout')
@@ -143,8 +143,7 @@ def upload_resume_form():
 
     return render_template('upload_resume.html')
 
-
-# ✅ Chatbot handler using OpenRouter
+# Chatbot via OpenRouter
 @socketio.on('user_message')
 def handle_user_message(json):
     user_input = json.get("message", "")
@@ -156,12 +155,11 @@ def handle_user_message(json):
             headers={
                 "Authorization": f"Bearer {OPENROUTER_API_KEY}",
                 "Content-Type": "application/json",
-                "HTTP-Referer": "https://1d7fb5704807.ngrok-free.app",  # update with your actual URL
+                "HTTP-Referer": os.getenv("RENDER_EXTERNAL_URL", "https://your-app.onrender.com"),
                 "X-Title": "SmartRecruitmentChatbot"
             },
             json={
                 "model": "meta-llama/llama-3-70b-instruct",
-               # "model":"openai/gpt-4",
                 "messages": [
                     {"role": "system", "content": "You are a helpful assistant for job seekers."},
                     {"role": "user", "content": user_input}
@@ -180,6 +178,3 @@ def handle_user_message(json):
         reply = f"Error talking to chatbot: {str(e)}"
 
     emit("bot_reply", {"message": reply})
-
-if __name__ == '__main__':
-    socketio.run(app, debug=True)

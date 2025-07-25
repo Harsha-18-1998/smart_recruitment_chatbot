@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: smart-recruitment-chatbot
+    env: python
+    region: oregon  # or choose your preferred region
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn user_app:app --worker-class eventlet -w 1 --bind 0.0.0.0:10000
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false
+    autoDeploy: true
