@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html>
 <head>
     <title>Admin Panel - Job Management</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body class="bg-light">
-    <!-- Navbar -->
+    # Navbar 
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">Admin Panel</a>
@@ -16,7 +16,7 @@
     </nav>
 
     <div class="container">
-        <!-- Flash Messages -->
+        # Flash Messages 
         {% with messages = get_flashed_messages() %}
           {% if messages %}
             {% for msg in messages %}
@@ -25,7 +25,7 @@
           {% endif %}
         {% endwith %}
 
-        <!-- Add Job Form -->
+        #Add Job Form 
         <h3>Add New Job</h3>
         <form method="post" class="mb-4">
             <div class="mb-3">
@@ -39,7 +39,7 @@
             <button type="submit" class="btn btn-primary">Add Job</button>
         </form>
 
-        <!-- CSV Import Form -->
+        #CSV Import Form 
         <h3>Import Jobs from CSV</h3>
         <form method="post" enctype="multipart/form-data" class="mb-4">
             <div class="mb-3">
@@ -49,7 +49,7 @@
             <button type="submit" class="btn btn-success">Upload CSV</button>
         </form>
 
-        <!-- Job Table -->
+        #Job Table 
         <h3>Existing Jobs</h3>
         <table class="table table-bordered table-striped">
             <thead class="table-dark">
@@ -75,4 +75,181 @@
         </table>
     </div>
 </body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel - Job Management</title>
+
+  <!-- Bootstrap & Chart.js -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body.dark-mode {
+      background-color: #121212 !important;
+      color: white;
+    }
+    .dark-mode .card,
+    .dark-mode .table,
+    .dark-mode .form-control,
+    .dark-mode input,
+    .dark-mode textarea {
+      background-color: #1f1f1f !important;
+      color: white !important;
+      border-color: #333;
+    }
+  </style>
+</head>
+<body class="bg-light">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">Admin Dashboard</a>
+      <button id="darkModeToggle" class="btn btn-outline-light">Toggle Dark Mode</button>
+      <a href="/admin_logout" class="btn btn-outline-light ms-2">Logout</a>
+    </div>
+  </nav>
+
+  <div class="container my-4">
+
+    <!-- Summary Cards -->
+    <div class="row mb-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <h5>Total Jobs</h5>
+            <p class="display-6">{{ total_jobs }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <h5>Total Resumes</h5>
+            <p class="display-6">{{ total_resumes }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm text-center">
+          <div class="card-body">
+            <h5>Total Matches</h5>
+            <p class="display-6">{{ total_matches }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alert alert-success">{{ msg }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- Search & Filter -->
+    <form method="GET" class="row g-2 mb-4">
+      <div class="col-md-6">
+        <input type="text" name="search" value="{{ request.args.get('search', '') }}" class="form-control" placeholder="Search job titles...">
+      </div>
+      <div class="col-md-4">
+        <select name="category" class="form-select">
+          <option value="">All Categories</option>
+          <option value="AI">AI</option>
+          <option value="Web Dev">Web Dev</option>
+          <option value="Data">Data</option>
+        </select>
+      </div>
+      <div class="col-md-2 d-grid">
+        <button class="btn btn-primary">Filter</button>
+      </div>
+    </form>
+
+    <!-- Job Chart -->
+    <div class="card mb-4">
+      <div class="card-body">
+        <canvas id="jobChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Add Job -->
+    <h3>Add New Job</h3>
+    <form method="post" class="mb-4">
+      <div class="mb-3">
+        <input type="text" name="title" class="form-control" placeholder="Job Title" required>
+      </div>
+      <div class="mb-3">
+        <textarea name="description" class="form-control" placeholder="Job Description" rows="3" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-success">Add Job</button>
+    </form>
+
+    <!-- CSV Import + Export -->
+    <div class="d-flex justify-content-between mb-3">
+      <form method="post" enctype="multipart/form-data">
+        <input type="file" name="csv_file" accept=".csv" required>
+        <button type="submit" class="btn btn-secondary">Import CSV</button>
+      </form>
+
+      <form method="post" action="/export_jobs_csv">
+        <button type="submit" class="btn btn-outline-secondary">Export CSV</button>
+      </form>
+    </div>
+
+    <!-- Jobs Table -->
+    <h3>Existing Jobs</h3>
+    <table class="table table-bordered table-striped">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th><th>Title</th><th>Description</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for job in jobs %}
+        <tr>
+          <td>{{ job.job_id }}</td>
+          <td>{{ job.title }}</td>
+          <td>{{ job.description }}</td>
+          <td>
+            <a href="/edit_job/{{ job.job_id }}" class="btn btn-sm btn-warning">Edit</a>
+            <form action="/delete_job/{{ job.job_id }}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Dark Mode Script & Chart -->
+  <script>
+    const chartData = {{ chart_data | safe }};
+    const ctx = document.getElementById('jobChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: chartData.labels,
+        datasets: [{
+          label: 'Job Counts by Role',
+          data: chartData.counts,
+          backgroundColor: '#0d6efd'
+        }]
+      }
+    });
+
+    document.getElementById('darkModeToggle').addEventListener('click', function () {
+      document.body.classList.toggle('dark-mode');
+    });
+  </script>
+</body>
 </html>
+
+
