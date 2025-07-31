@@ -1,29 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Smart Recruitment Chatbot</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body {
-      background: linear-gradient(to right, #f8f9fa, #e0e7ff);
-      min-height: 100vh;
-    }
-    .header {
-      margin-top: 100px;
-    }
-  </style>
-</head>
-<body>
+{% extends "base.html" %}
 
-  <div class="container text-center header">
-    <h1 class="display-4 fw-bold mb-3">Smart Recruitment Chatbot</h1>
-    <p class="lead mb-4">Get matched with jobs, extract resume skills, and ace interviews — all with AI.</p>
-    <div>
-      <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg me-3">Sign Up</a>
-      <a href="{{ url_for('login') }}" class="btn btn-outline-dark btn-lg">Login</a>
-    </div>
+{% block content %}
+<div class="text-center mt-5">
+  <h1 class="display-4 fw-bold">Welcome to Smart Recruit</h1>
+  <p class="lead mt-3">AI-powered job matching platform that finds the best opportunities for you.</p>
+
+  <div class="mt-4">
+    <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg me-2">Get Started</a>
+    <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg">Login</a>
   </div>
+</div>
 
-</body>
-</html>
+<hr class="my-5">
+
+<!-- Optional: Features Section -->
+<div class="row text-center">
+  <div class="col-md-4">
+    <div class="mb-3"><i class="bi bi-upload fs-2 text-primary"></i></div>
+    <h5>Upload Resume</h5>
+    <p>Just upload your resume and let our AI parse your skills instantly.</p>
+  </div>
+  <div class="col-md-4">
+    <div class="mb-3"><i class="bi bi-lightbulb fs-2 text-warning"></i></div>
+    <h5>Smart Job Matching</h5>
+    <p>We use AI to suggest the best jobs that fit your profile.</p>
+  </div>
+  <div class="col-md-4">
+    <div class="mb-3"><i class="bi bi-chat fs-2 text-success"></i></div>
+    <h5>Chat with a Bot</h5>
+    <p>Ask questions and get instant answers about your career or job search.</p>
+  </div>
+</div>
+{% endblock %}

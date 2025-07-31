@@ -1,11 +1,18 @@
-# shared/chatbot_engine.py
-
+import os
+import requests
+from dotenv import load_dotenv
 from shared.db_config import get_db_connection
 
-def get_job_info_reply(user_msg: str) -> str:
-    msg = user_msg.lower()
+# Load .env
+load_dotenv()
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
-    # Simple intent mapping
+# -----------------------
+# Rule-Based Responses
+# -----------------------
+def get_rule_based_reply(msg: str) -> str | None:
+    msg = msg.lower()
+
     if any(kw in msg for kw in ["hi", "hello", "hey"]):
         return "Hello! I’m your recruitment assistant. How can I help you today?"
 
@@ -21,13 +28,14 @@ def get_job_info_reply(user_msg: str) -> str:
     elif "bye" in msg:
         return "Goodbye! Let me know if you need any help later."
 
-    return "I’m sorry, I didn’t understand that. You can ask me about job openings, resume upload, or how to apply!"
+    return None  # unknown intent
+
 
 def get_available_jobs() -> str:
     try:
         conn = get_db_connection()
         cursor = conn.cursor(dictionary=True)
-        cursor.execute("SELECT title FROM job_posts LIMIT 5")  # Table name depends on your DB
+        cursor.execute("SELECT title FROM job_posts LIMIT 5")
         jobs = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -37,6 +45,47 @@ def get_available_jobs() -> str:
             return f"Here are some current job openings:\n{job_titles}"
         else:
             return "There are no jobs listed at the moment."
+    except:
+        return "Oops! Something went wrong while fetching job listings."
+
+
+# -----------------------
+# Fallback to LLM
+# -----------------------
+def get_ai_reply(user_msg: str) -> str:
+    try:
+        response = requests.post(
+            "https://openrouter.ai/api/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+                "Content-Type": "application/json",
+                "HTTP-Referer": os.getenv("RENDER_EXTERNAL_URL", "https://your-app.onrender.com"),
+                "X-Title": "SmartRecruitmentChatbot"
+            },
+            json={
+                "model": "meta-llama/llama-3-70b-instruct",
+                "messages": [
+                    {"role": "system", "content": "You are a helpful assistant for job seekers."},
+                    {"role": "user", "content": user_msg}
+                ]
+            }
+        )
+
+        if response.status_code == 200:
+            return response.json()["choices"][0]["message"]["content"]
+        else:
+            return f"LLM Error: OpenRouter returned status {response.status_code}"
 
     except Exception as e:
-        return "Oops! Something went wrong while fetching job listings."
+        return f"Chatbot Error: {str(e)}"
+
+
+# -----------------------
+# Main Handler
+# -----------------------
+def get_job_info_reply(user_msg: str) -> str:
+    rule_reply = get_rule_based_reply(user_msg)
+    if rule_reply:
+        return rule_reply
+    else:
+        return get_ai_reply(user_msg)

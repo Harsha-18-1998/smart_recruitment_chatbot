@@ -1,123 +1,94 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>User Dashboard</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    #chat-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 300px;
-      background: #fff;
-      border: 1px solid #ddd;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-      padding: 15px;
-      border-radius: 8px;
-      z-index: 999;
-    }
-    #messages {
-      max-height: 200px;
-      overflow-y: auto;
-      margin-bottom: 10px;
-      font-size: 14px;
-    }
-    .message {
-      margin-bottom: 5px;
-      line-height: 1.4;
-    }
-    .bot { color: #007bff; }
-    .user { font-weight: bold; }
-  </style>
-</head>
-<body class="bg-light">
+{% extends "base.html" %}
+{% block title %}User Dashboard{% endblock %}
 
-<nav class="navbar navbar-light bg-white shadow-sm">
-  <div class="container-fluid">
-    <span class="navbar-brand mb-0 h1">Smart Recruit</span>
-    <a class="btn btn-outline-danger" href="{{ url_for('logout') }}">Logout</a>
-  </div>
-</nav>
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Welcome, {{ data.name or session['user'] }}</h2>
 
-<div class="container mt-5">
-  <h3>Welcome, {{ session['user'] }}</h3>
-
-  <div class="card my-4">
-    <div class="card-header">Upload Your Resume</div>
-    <div class="card-body">
-      <form method="POST" action="{{ url_for('upload_resume_form') }}" enctype="multipart/form-data">
-        <div class="row mb-3">
-          <div class="col-md-6">
-            <label>Name</label>
-            <input type="text" name="name" class="form-control" required value="{{ data.name if data else '' }}">
-          </div>
-          <div class="col-md-6">
-            <label>Email</label>
-            <input type="email" name="email" class="form-control" required value="{{ data.email if data else '' }}">
-          </div>
+    <!-- Resume Upload Form -->
+    <div class="card mb-4">
+        <div class="card-header bg-primary text-white">
+            Upload Your Resume
         </div>
-        <input type="file" name="resume" class="form-control mb-3" accept=".txt" required>
-        <button type="submit" class="btn btn-primary">Upload</button>
-      </form>
+        <div class="card-body">
+            <form method="POST" enctype="multipart/form-data" action="{{ url_for('user_dashboard') }}">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Full Name</label>
+                    <input type="text" name="name" class="form-control" value="{{ data.name }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control" value="{{ data.email }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="resume" class="form-label">Resume File (.txt)</label>
+                    <input type="file" name="resume" class="form-control" accept=".txt" required>
+                </div>
+                <button type="submit" class="btn btn-success">Upload & Analyze</button>
+            </form>
+        </div>
     </div>
-  </div>
 
-  {% if data %}
-  <div class="row">
-    <div class="col-md-6">
-      <div class="card mb-3">
+    <!-- Resume Analysis -->
+    {% if data.skills %}
+    <div class="card mb-4">
         <div class="card-header bg-success text-white">Extracted Skills</div>
         <div class="card-body">
-          <ul>
-            {% for skill in data.skills.split(',') %}
-              <li>{{ skill.strip() }}</li>
-            {% endfor %}
-          </ul>
+            <p>{{ data.skills }}</p>
         </div>
-      </div>
     </div>
+    {% endif %}
 
-    <div class="col-md-6">
-      <div class="card mb-3">
+    {% if data.top_jobs %}
+    <div class="card mb-4">
         <div class="card-header bg-info text-white">Top Matching Jobs</div>
         <div class="card-body">
-          {% for job in data.top_jobs.split(';') %}
-            <p>🔹 {{ job.strip() }}</p>
-          {% endfor %}
+            <ul>
+                {% for job in data.top_jobs.split(';') %}
+                    <li>{{ job.strip() }}</li>
+                {% endfor %}
+            </ul>
         </div>
-      </div>
     </div>
-  </div>
-  {% endif %}
+    {% endif %}
+
+    <!-- Chatbot -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">Job Assistant Chatbot</div>
+        <div class="card-body">
+            <div id="chat-box" style="height: 250px; overflow-y: auto; background: #f9f9f9; padding: 10px; border: 1px solid #ddd;"></div>
+            <div class="input-group mt-2">
+                <input type="text" id="user-input" class="form-control" placeholder="Ask me anything about jobs...">
+                <button class="btn btn-primary" onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Chatbot Section -->
-<div id="chat-container">
-  <div id="messages"></div>
-  <input id="user-input" class="form-control" placeholder="Ask me anything...">
-</div>
-
-<script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
 <script>
-  const socket = io();
-  const input = document.getElementById("user-input");
-  const messages = document.getElementById("messages");
+    const socket = io();
+    const chatBox = document.getElementById("chat-box");
+    const userInput = document.getElementById("user-input");
 
-  input.addEventListener("keypress", function(e) {
-    if (e.key === "Enter" && input.value.trim()) {
-      const userMessage = input.value.trim();
-      messages.innerHTML += `<div class="message user">👤 ${userMessage}</div>`;
-      socket.emit("user_message", { message: userMessage });
-      input.value = "";
+    function sendMessage() {
+        const message = userInput.value.trim();
+        if (!message) return;
+
+        appendMessage("You", message);
+        socket.emit("user_message", { message: message });
+        userInput.value = "";
     }
-  });
 
-  socket.on("bot_reply", function(data) {
-    messages.innerHTML += `<div class="message bot">🤖 ${data.message}</div>`;
-    messages.scrollTop = messages.scrollHeight;
-  });
+    socket.on("bot_reply", function (data) {
+        appendMessage("Assistant", data.message);
+    });
+
+    function appendMessage(sender, message) {
+        const msg = document.createElement("p");
+        msg.innerHTML = `<strong>${sender}:</strong> ${message}`;
+        chatBox.appendChild(msg);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
 </script>
-
-</body>
-</html>
+{% endblock %}
