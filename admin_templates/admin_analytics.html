@@ -1,0 +1,90 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Analytics & Reports</h2>
+
+<!-- Summary Stats -->
+<div class="row text-center mb-4">
+  <div class="col-md-3">
+    <div class="card bg-primary text-white">
+      <div class="card-body">
+        <h5 class="card-title">Total Candidates</h5>
+        <p class="display-6">124</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-success text-white">
+      <div class="card-body">
+        <h5 class="card-title">Jobs Posted</h5>
+        <p class="display-6">18</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-warning text-white">
+      <div class="card-body">
+        <h5 class="card-title">Avg Time to Hire</h5>
+        <p class="display-6">12 Days</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card bg-info text-white">
+      <div class="card-body">
+        <h5 class="card-title">Avg Applications</h5>
+        <p class="display-6">37</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Charts -->
+<div class="row">
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title text-center">Source Effectiveness</h6>
+        <canvas id="sourceChart"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card">
+      <div class="card-body">
+        <h6 class="card-title text-center">Recruiter Performance</h6>
+        <canvas id="recruiterChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Pie Chart
+  new Chart(document.getElementById('sourceChart'), {
+    type: 'pie',
+    data: {
+      labels: ['LinkedIn', 'Indeed', 'Referral', 'Website'],
+      datasets: [{
+        data: [45, 25, 20, 10],
+        backgroundColor: ['#007bff', '#28a745', '#ffc107', '#17a2b8']
+      }]
+    }
+  });
+
+  // Bar Chart
+  new Chart(document.getElementById('recruiterChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Alice', 'Bob', 'Charlie', 'Diana'],
+      datasets: [{
+        label: 'Hires',
+        data: [12, 9, 7, 14],
+        backgroundColor: '#6c757d'
+      }]
+    }
+  });
+</script>
+{% endblock %}

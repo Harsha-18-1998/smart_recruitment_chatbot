@@ -1,0 +1,47 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Job Management</h2>
+
+<div class="mb-3 text-end">
+  <button class="btn btn-success">+ Post New Job</button>
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Job Title</th>
+        <th>Department</th>
+        <th>Status</th>
+        <th>Posted On</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Sample static data -->
+      <tr>
+        <td>Frontend Developer</td>
+        <td>Engineering</td>
+        <td><span class="badge bg-success">Open</span></td>
+        <td>2025-07-28</td>
+        <td>
+          <button class="btn btn-sm btn-primary">Edit</button>
+          <button class="btn btn-sm btn-warning">Close</button>
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </td>
+      </tr>
+      <tr>
+        <td>Product Manager</td>
+        <td>Product</td>
+        <td><span class="badge bg-secondary">Closed</span></td>
+        <td>2025-07-15</td>
+        <td>
+          <button class="btn btn-sm btn-primary">Edit</button>
+          <button class="btn btn-sm btn-danger">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+{% endblock %}

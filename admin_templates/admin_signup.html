@@ -1,9 +1,9 @@
-<!-- admin_templates/admin_login.html -->
+<!-- admin_templates/admin_signup.html -->
 {% extends "admin_base.html" %}
 {% block content %}
 <div class="container mt-5" style="max-width: 500px;">
-  <h2 class="mb-4">Admin Login</h2>
-  <form method="POST" action="/admin/login">
+  <h2 class="mb-4">Admin Signup</h2>
+  <form method="POST" action="/admin/signup">
     <div class="mb-3">
       <label for="username" class="form-label">Username</label>
       <input type="text" name="username" class="form-control" required>
@@ -12,7 +12,7 @@
       <label for="password" class="form-label">Password</label>
       <input type="password" name="password" class="form-control" required>
     </div>
-    <button type="submit" class="btn btn-primary w-100">Login</button>
+    <button type="submit" class="btn btn-success w-100">Signup</button>
   </form>
 </div>
 {% endblock %}
