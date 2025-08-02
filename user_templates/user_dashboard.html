@@ -1,94 +1,103 @@
-{% extends "base.html" %}
-{% block title %}User Dashboard{% endblock %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Dashboard - SmartRecruit</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background-color: #f4f6f9;
+        }
 
-{% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">Welcome, {{ data.name or session['user'] }}</h2>
+        .navbar {
+            background-color: #003366;
+            overflow: hidden;
+            padding: 0.8rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
 
-    <!-- Resume Upload Form -->
-    <div class="card mb-4">
-        <div class="card-header bg-primary text-white">
-            Upload Your Resume
-        </div>
-        <div class="card-body">
-            <form method="POST" enctype="multipart/form-data" action="{{ url_for('user_dashboard') }}">
-                <div class="mb-3">
-                    <label for="name" class="form-label">Full Name</label>
-                    <input type="text" name="name" class="form-control" value="{{ data.name }}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" name="email" class="form-control" value="{{ data.email }}" required>
-                </div>
-                <div class="mb-3">
-                    <label for="resume" class="form-label">Resume File (.txt)</label>
-                    <input type="file" name="resume" class="form-control" accept=".txt" required>
-                </div>
-                <button type="submit" class="btn btn-success">Upload & Analyze</button>
-            </form>
-        </div>
-    </div>
+        .navbar .logo {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
 
-    <!-- Resume Analysis -->
-    {% if data.skills %}
-    <div class="card mb-4">
-        <div class="card-header bg-success text-white">Extracted Skills</div>
-        <div class="card-body">
-            <p>{{ data.skills }}</p>
-        </div>
-    </div>
-    {% endif %}
+        .navbar .menu a {
+            color: white;
+            margin-left: 1.5rem;
+            text-decoration: none;
+            font-weight: 500;
+        }
 
-    {% if data.top_jobs %}
-    <div class="card mb-4">
-        <div class="card-header bg-info text-white">Top Matching Jobs</div>
-        <div class="card-body">
-            <ul>
-                {% for job in data.top_jobs.split(';') %}
-                    <li>{{ job.strip() }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-    {% endif %}
+        .navbar .menu a:hover {
+            text-decoration: underline;
+        }
 
-    <!-- Chatbot -->
-    <div class="card mb-4">
-        <div class="card-header bg-dark text-white">Job Assistant Chatbot</div>
-        <div class="card-body">
-            <div id="chat-box" style="height: 250px; overflow-y: auto; background: #f9f9f9; padding: 10px; border: 1px solid #ddd;"></div>
-            <div class="input-group mt-2">
-                <input type="text" id="user-input" class="form-control" placeholder="Ask me anything about jobs...">
-                <button class="btn btn-primary" onclick="sendMessage()">Send</button>
-            </div>
-        </div>
+        .content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .welcome {
+            font-size: 1.4rem;
+            margin-bottom: 1.5rem;
+            color: #333;
+        }
+
+        .chatbot-container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.05);
+        }
+
+        iframe {
+            border: none;
+            width: 100%;
+            height: 400px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="navbar">
+    <div class="logo">SmartRecruit</div>
+    <div class="menu">
+        <a href="{{ url_for('upload_resume') }}"><i class="fas fa-upload"></i> Resume Upload</a>
+        <a href="#"><i class="fas fa-user"></i> Mock Interview</a>
+        <a href="#"><i class="fas fa-robot"></i>Profile </a>
+        <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        <nav>
+            <a href="{{ url_for('logout') }}">Logout</a>
+            <a href="{{ url_for('resume_upload') }}">Resume Upload</a>
+            <a href="{{ url_for('profile') }}">Profile</a>
+            <a href="{{ url_for('mock_interview') }}">Mock Interview</a>
+        </nav>
+
     </div>
 </div>
 
-<script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
-<script>
-    const socket = io();
-    const chatBox = document.getElementById("chat-box");
-    const userInput = document.getElementById("user-input");
+<div class="content">
+    <div class="welcome">
+        Welcome, <strong>{{ session['username'] }}</strong>! Ask me anything about resumes, jobs, interviews, and more.
+    </div>
 
-    function sendMessage() {
-        const message = userInput.value.trim();
-        if (!message) return;
+    <div class="chatbot-container">
+        <!-- Embed or integrate your chatbot here -->
+        <iframe src="{{ url_for('chat') }}"></iframe>
+    </div>
+</div>
+<nav>
+  <a href="{{ url_for('logout') }}">Logout</a>
+  <a href="{{ url_for('resume_upload') }}">Resume Upload</a>
+  <a href="{{ url_for('profile') }}">Profile</a>
+  <a href="{{ url_for('mock_interview') }}">Mock Interview</a>
+</nav>
 
-        appendMessage("You", message);
-        socket.emit("user_message", { message: message });
-        userInput.value = "";
-    }
-
-    socket.on("bot_reply", function (data) {
-        appendMessage("Assistant", data.message);
-    });
-
-    function appendMessage(sender, message) {
-        const msg = document.createElement("p");
-        msg.innerHTML = `<strong>${sender}:</strong> ${message}`;
-        chatBox.appendChild(msg);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-</script>
-{% endblock %}
+</body>
+</html>

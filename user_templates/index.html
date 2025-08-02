@@ -1,34 +1,180 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Recruitment Chatbot</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f7fa;
+        }
 
-{% block content %}
-<div class="text-center mt-5">
-  <h1 class="display-4 fw-bold">Welcome to Smart Recruit</h1>
-  <p class="lead mt-3">AI-powered job matching platform that finds the best opportunities for you.</p>
+        nav {
+            background-color: #003366;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-  <div class="mt-4">
-    <a href="{{ url_for('signup') }}" class="btn btn-primary btn-lg me-2">Get Started</a>
-    <a href="{{ url_for('login') }}" class="btn btn-outline-secondary btn-lg">Login</a>
-  </div>
+        nav .logo {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-size: 1rem;
+            transition: color 0.2s;
+        }
+
+        nav .nav-links a:hover {
+            color: #f0db4f;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #003366;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #444;
+        }
+
+        .cta-buttons {
+            margin-top: 2rem;
+        }
+
+        .cta-buttons a {
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            background-color: #003366;
+            color: white;
+            border-radius: 5px;
+            margin: 0 1rem;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .cta-buttons a:hover {
+            background-color: #005599;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #003366;
+            color: white;
+            margin-top: 5rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">SmartRecruit</div>
+    <div class="nav-links">
+        <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+        <a href="{{ url_for('login') }}">Login</a>
+        <a href="{{ url_for('signup') }}"><i class="fas fa-user-plus"></i> Register</a>
+        <a href="{{ url_for('register') }}">Register</a>
+    </div>
+</nav>
+
+<div class="hero">
+    <h1>Welcome to Smart Recruitment Chatbot</h1>
+    <p>Your smart companion for job discovery, resume review, and career guidance.</p>
+
+    <div class="cta-buttons">
+        <a href="{{ url_for('login') }}">Get Started</a>
+        <a href="{{ url_for('signup') }}">Create an Account</a>
+    </div>
 </div>
 
-<hr class="my-5">
 
-<!-- Optional: Features Section -->
-<div class="row text-center">
-  <div class="col-md-4">
-    <div class="mb-3"><i class="bi bi-upload fs-2 text-primary"></i></div>
-    <h5>Upload Resume</h5>
-    <p>Just upload your resume and let our AI parse your skills instantly.</p>
-  </div>
-  <div class="col-md-4">
-    <div class="mb-3"><i class="bi bi-lightbulb fs-2 text-warning"></i></div>
-    <h5>Smart Job Matching</h5>
-    <p>We use AI to suggest the best jobs that fit your profile.</p>
-  </div>
-  <div class="col-md-4">
-    <div class="mb-3"><i class="bi bi-chat fs-2 text-success"></i></div>
-    <h5>Chat with a Bot</h5>
-    <p>Ask questions and get instant answers about your career or job search.</p>
-  </div>
-</div>
-{% endblock %}
+
+<footer>
+    &copy; 2025 SmartRecruit. All rights reserved.
+</footer>
+
+</body>
+</html>
+
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Smart Recruitment Chatbot</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .navbar {
+            background-color: #007bff;
+        }
+        .navbar-brand, .nav-link {
+            color: white !important;
+        }
+        .hero {
+            padding: 100px 0;
+            text-align: center;
+            background-color: #e9ecef;
+        }
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        .btn-custom {
+            padding: 10px 20px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand" href="{{ url_for('index') }}">SmartRecruit</a>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-plus"></i> Register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="hero">
+    <div class="container">
+        <h1>Welcome to Smart Recruitment Chatbot</h1>
+        <p>Let our AI help you find the right job and improve your resume with smart suggestions.</p>
+        <a href="{{ url_for('login') }}" class="btn btn-primary btn-custom">Get Started</a>
+    </div>
+</section>
+
+</body>
+</html> -->
