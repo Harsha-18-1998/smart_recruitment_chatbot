@@ -1,47 +1,58 @@
-{% extends "admin_base.html" %}
+<!-- templates/admin_job_management.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Job Management - Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-7xl mx-auto">
+        <h1 class="text-2xl font-bold mb-6">Job Management</h1>
 
-{% block content %}
-<h2 class="mb-4">Job Management</h2>
+        <!-- Add Job Form -->
+        <form method="POST" action="/admin/add_job" class="grid grid-cols-1 md:grid-cols-2 gap-4 bg-white p-6 rounded-lg shadow mb-8">
+            <input name="job_id" type="text" placeholder="Job ID" required class="border p-2 rounded">
+            <input name="title" type="text" placeholder="Title" required class="border p-2 rounded">
+            <input name="company" type="text" placeholder="Company" required class="border p-2 rounded">
+            <input name="location" type="text" placeholder="Location" required class="border p-2 rounded">
+            <input name="skills" type="text" placeholder="Skills (comma-separated)" required class="border p-2 rounded">
+            <textarea name="description" placeholder="Job Description" class="border p-2 rounded md:col-span-2"></textarea>
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded md:col-span-2">Add Job</button>
+        </form>
 
-<div class="mb-3 text-end">
-  <button class="btn btn-success">+ Post New Job</button>
-</div>
-
-<div class="table-responsive">
-  <table class="table table-bordered table-hover align-middle">
-    <thead class="table-light">
-      <tr>
-        <th>Job Title</th>
-        <th>Department</th>
-        <th>Status</th>
-        <th>Posted On</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <!-- Sample static data -->
-      <tr>
-        <td>Frontend Developer</td>
-        <td>Engineering</td>
-        <td><span class="badge bg-success">Open</span></td>
-        <td>2025-07-28</td>
-        <td>
-          <button class="btn btn-sm btn-primary">Edit</button>
-          <button class="btn btn-sm btn-warning">Close</button>
-          <button class="btn btn-sm btn-danger">Delete</button>
-        </td>
-      </tr>
-      <tr>
-        <td>Product Manager</td>
-        <td>Product</td>
-        <td><span class="badge bg-secondary">Closed</span></td>
-        <td>2025-07-15</td>
-        <td>
-          <button class="btn btn-sm btn-primary">Edit</button>
-          <button class="btn btn-sm btn-danger">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-{% endblock %}
+        <!-- Job Table -->
+        <table class="w-full bg-white shadow rounded-lg overflow-hidden">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="p-3 text-left">Job ID</th>
+                    <th class="p-3 text-left">Title</th>
+                    <th class="p-3 text-left">Company</th>
+                    <th class="p-3 text-left">Location</th>
+                    <th class="p-3 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for job in jobs %}
+                <tr class="border-t">
+                    <td class="p-3">{{ job['Job ID'] }}</td>
+                    <td class="p-3">{{ job['Title'] }}</td>
+                    <td class="p-3">{{ job['Company'] }}</td>
+                    <td class="p-3">{{ job['Location'] }}</td>
+                    <td class="p-3 space-x-2">
+                        <form method="POST" action="/admin/delete_job" class="inline">
+                            <input type="hidden" name="job_id" value="{{ job['Job ID'] }}">
+                            <button type="submit" class="text-red-600 hover:underline">Delete</button>
+                        </form>
+                        <form method="GET" action="/admin/edit_job" class="inline">
+                            <input type="hidden" name="job_id" value="{{ job['Job ID'] }}">
+                            <button type="submit" class="text-blue-600 hover:underline">Edit</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,241 +1,101 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Google Fonts: Inter -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Custom Styles -->
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc; /* slate-50 */
-        }
-        /* Custom scrollbar for a cleaner look */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #d1d5db; /* gray-400 */
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #9ca3af; /* gray-500 */
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard - Smart Recruit</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Heroicons for icons -->
+  <script src="https://unpkg.com/feather-icons"></script>
 </head>
-<body class="antialiased">
+<body class="bg-gray-100 font-sans leading-normal tracking-normal">
 
-    <div class="flex h-screen bg-gray-50">
-        <!-- Sidebar -->
-        <aside class="w-64 flex-shrink-0 flex flex-col border-r transition-all duration-300">
-            <div class="h-16 flex items-center justify-center px-4 border-b">
-                <!-- Logo -->
-                <div class="flex items-center space-x-2">
-                    <svg class="w-8 h-8 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17.25v1.007a3 3 0 01-.879 2.122L7.5 21h9l-1.621-.621A3 3 0 0115 18.257V17.25m6-12V15a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 15V5.25A2.25 2.25 0 015.25 3h13.5A2.25 2.25 0 0121 5.25z" />
-                    </svg>
-                    <span class="text-xl font-semibold text-gray-800">AdminCorp</span>
-                </div>
-            </div>
-            <nav class="flex-1 px-4 py-4 space-y-2">
-                <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md">
-                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" />
-                    </svg>
-                    Dashboard
-                </a>
-                <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">
-                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m-7.5-2.226a3 3 0 00-4.682-2.72 9.094 9.094 0 003.741-.479m7.5 2.226L12 17.25l-4.5 2.475m6.375-10.125a3.375 3.375 0 00-6.75 0l-1.25 1.25a3.375 3.375 0 000 4.75l1.25 1.25a3.375 3.375 0 004.75 0l1.25-1.25a3.375 3.375 0 000-4.75l-1.25-1.25z" />
-                    </svg>
-                    Candidates
-                </a>
-                <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">
-                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.07a2.25 2.25 0 01-2.25 2.25H5.92a2.25 2.25 0 01-2.15-2.495l.38-4.503a2.25 2.25 0 012.15-2.002h12.04a2.25 2.25 0 012.15 2.002z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 2.25a3 3 0 00-3 3v.154a3 3 0 01-3 3v.154a3 3 0 00-3 3v.154a3 3 0 01-3 3v.154a3 3 0 00-3 3v.154a3 3 0 01-3 3v.154a3 3 0 00-3 3v.154a3 3 0 01-3 3v.154a3 3 0 00-3 3v.154a3 3 0 01-3 3" />
-                    </svg>
-                    Job Postings
-                </a>
-                <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">
-                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
-                    </svg>
-                    Analytics
-                </a>
-            </nav>
-            <div class="px-4 py-4 mt-auto border-t">
-                 <a href="#" class="flex items-center px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-100 rounded-lg">
-                    <svg class="w-5 h-5 mr-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15m3 0l3-3m0 0l-3-3m3 3H9" />
-                    </svg>
-                    Logout
-                </a>
-            </div>
-        </aside>
-
-        <!-- Main content -->
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <!-- Header -->
-            <header class="h-16 flex items-center justify-between px-6 bg-white border-b">
-                <div class="flex items-center">
-                    <h1 class="text-2xl font-semibold text-gray-800">Dashboard</h1>
-                </div>
-                <div class="flex items-center space-x-4">
-                    <button class="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-full">
-                        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
-                        </svg>
-                    </button>
-                    <div class="flex items-center space-x-2">
-                        <img class="h-10 w-10 rounded-full object-cover" src="https://placehold.co/100x100/6366f1/ffffff?text=A" alt="Admin Avatar">
-                        <div>
-                            <p class="text-sm font-medium text-gray-800">Admin User</p>
-                            <p class="text-xs text-gray-500">admin@corp.com</p>
-                        </div>
-                    </div>
-                </div>
-            </header>
-            
-            <!-- Content Body -->
-            <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50">
-                <div class="container mx-auto px-6 py-8">
-                    
-                    <!-- Summary Cards -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between">
-                            <div class="flex items-start justify-between">
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-500">Total Candidates</span>
-                                    <span class="text-3xl font-bold text-gray-800 mt-1">312</span>
-                                </div>
-                                <div class="p-3 bg-indigo-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-indigo-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="mt-4 text-sm text-green-600">+12 since last month</div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between">
-                            <div class="flex items-start justify-between">
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-500">Open Jobs</span>
-                                    <span class="text-3xl font-bold text-gray-800 mt-1">26</span>
-                                </div>
-                                <div class="p-3 bg-green-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.07a2.25 2.25 0 01-2.25 2.25H5.92a2.25 2.25 0 01-2.15-2.495l.38-4.503a2.25 2.25 0 012.15-2.002h12.04a2.25 2.25 0 012.15 2.002z" />
-                                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 2.25a3 3 0 00-3 3v.154a3 3 0 01-3 3v.154a3 3 0 00-3 3v.154a3 3 0 01-3 3v.154a3 3 0 00-3 3v.154a3 3 0 01-3 3v.154a3 3 0 00-3 3v.154a3 3 0 01-3 3" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="mt-4 text-sm text-gray-500">3 new this week</div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between">
-                            <div class="flex items-start justify-between">
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-500">Interviews Scheduled</span>
-                                    <span class="text-3xl font-bold text-gray-800 mt-1">74</span>
-                                </div>
-                                <div class="p-3 bg-yellow-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-yellow-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0h18M-4.5 12h22.5" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="mt-4 text-sm text-gray-500">8 today</div>
-                        </div>
-                        <div class="bg-white rounded-xl shadow-lg p-6 flex flex-col justify-between">
-                            <div class="flex items-start justify-between">
-                                <div class="flex flex-col">
-                                    <span class="text-sm text-gray-500">New Hires</span>
-                                    <span class="text-3xl font-bold text-gray-800 mt-1">14</span>
-                                </div>
-                                <div class="p-3 bg-blue-100 rounded-lg">
-                                    <svg class="w-6 h-6 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 0110.374 21c-2.331 0-4.512-.645-6.374-1.766z" />
-                                    </svg>
-                                </div>
-                            </div>
-                            <div class="mt-4 text-sm text-green-600">This month</div>
-                        </div>
-                    </div>
-
-                    <!-- Upcoming Interviews Table -->
-                    <div class="mt-8 bg-white rounded-xl shadow-lg overflow-hidden">
-                        <div class="px-6 py-4 border-b">
-                            <h2 class="text-lg font-semibold text-gray-800">Upcoming Interviews</h2>
-                        </div>
-                        <div class="overflow-x-auto">
-                            <table class="w-full text-sm text-left text-gray-500">
-                                <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-                                    <tr>
-                                        <th scope="col" class="px-6 py-3">Candidate</th>
-                                        <th scope="col" class="px-6 py-3">Position</th>
-                                        <th scope="col" class="px-6 py-3">Date</th>
-                                        <th scope="col" class="px-6 py-3">Interviewer</th>
-                                        <th scope="col" class="px-6 py-3">Status</th>
-                                        <th scope="col" class="px-6 py-3"><span class="sr-only">Actions</span></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr class="bg-white border-b hover:bg-gray-50">
-                                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Ananya Singh</td>
-                                        <td class="px-6 py-4">Frontend Developer</td>
-                                        <td class="px-6 py-4">Aug 2, 2025</td>
-                                        <td class="px-6 py-4">Raj Mehta</td>
-                                        <td class="px-6 py-4">
-                                            <span class="px-2 py-1 text-xs font-medium text-green-800 bg-green-100 rounded-full">Confirmed</span>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <a href="#" class="font-medium text-indigo-600 hover:underline">Details</a>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white border-b hover:bg-gray-50">
-                                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Ravi Kumar</td>
-                                        <td class="px-6 py-4">Backend Developer</td>
-                                        <td class="px-6 py-4">Aug 3, 2025</td>
-                                        <td class="px-6 py-4">Priya Shah</td>
-                                        <td class="px-6 py-4">
-                                            <span class="px-2 py-1 text-xs font-medium text-yellow-800 bg-yellow-100 rounded-full">Pending</span>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <a href="#" class="font-medium text-indigo-600 hover:underline">Details</a>
-                                        </td>
-                                    </tr>
-                                    <tr class="bg-white hover:bg-gray-50">
-                                        <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">Meera Iyer</td>
-                                        <td class="px-6 py-4">UI/UX Designer</td>
-                                        <td class="px-6 py-4">Aug 4, 2025</td>
-                                        <td class="px-6 py-4">Amit Bhatt</td>
-                                        <td class="px-6 py-4">
-                                            <span class="px-2 py-1 text-xs font-medium text-red-800 bg-red-100 rounded-full">Cancelled</span>
-                                        </td>
-                                        <td class="px-6 py-4 text-right">
-                                            <a href="#" class="font-medium text-indigo-600 hover:underline">Details</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
+  <!-- Sidebar -->
+  <div class="flex h-screen">
+    <div class="w-64 bg-white shadow-md">
+      <div class="p-6 text-xl font-bold text-blue-700 border-b border-gray-200">Smart Recruit</div>
+      <nav class="mt-4">
+        <a href="/admin/candidates" class="flex items-center px-6 py-3 hover:bg-gray-200">
+          <i data-feather="users" class="mr-3"></i> Candidate Management
+        </a>
+        <a href="/admin/jobs" class="flex items-center px-6 py-3 hover:bg-gray-200">
+          <i data-feather="briefcase" class="mr-3"></i> Job Management
+        </a>
+        <a href="/admin/analytics" class="flex items-center px-6 py-3 hover:bg-gray-200">
+          <i data-feather="bar-chart-2" class="mr-3"></i> Analytics
+        </a>
+        <a href="/admin/communication" class="flex items-center px-6 py-3 hover:bg-gray-200">
+          <i data-feather="message-circle" class="mr-3"></i> Communication Center
+        </a>
+        <a href="/admin/logout" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-100">
+          <i data-feather="log-out" class="mr-3"></i> Logout
+        </a>
+      </nav>
     </div>
 
+    <!-- Main Content -->
+    <div class="flex-1 flex flex-col">
+      <!-- Topbar -->
+      <header class="bg-white border-b border-gray-200 shadow-sm p-4 flex justify-between items-center">
+        <div class="text-lg font-semibold text-gray-700">Dashboard</div>
+        <div class="flex items-center space-x-4">
+          <!-- Notification Bell -->
+          <div class="relative">
+            <button id="notifBtn" class="focus:outline-none">
+              <i data-feather="bell"></i>
+            </button>
+            <div id="notifDropdown" class="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-lg hidden z-50">
+              <div class="p-3 text-sm text-gray-700 font-semibold border-b">Recent Registrations</div>
+              <ul id="notifList" class="max-h-60 overflow-y-auto text-sm text-gray-600">
+                <li class="px-4 py-2 hover:bg-gray-100">No new notifications</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Profile Dropdown -->
+          <div class="relative">
+            <button id="profileBtn" class="focus:outline-none flex items-center space-x-2">
+              <img src="https://via.placeholder.com/32" class="rounded-full" />
+              <span class="text-sm font-medium text-gray-700">Admin</span>
+            </button>
+            <div id="profileDropdown" class="absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-lg hidden z-50">
+              <div class="p-4">
+                <div class="font-semibold">Admin Profile</div>
+                <div class="text-sm text-gray-600 mt-1">admin@example.com</div>
+                <div class="mt-4">
+                  <button class="w-full text-left text-blue-600 hover:underline text-sm">Edit Profile</button>
+                </div>
+                <div class="mt-2">
+                  <a href="/admin/logout" class="w-full block text-left text-red-600 hover:underline text-sm">Logout</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard Content Area -->
+      <main class="p-6">
+        <h2 class="text-2xl font-semibold text-gray-700">Welcome, Admin!</h2>
+        <p class="text-gray-500 mt-2">Use the side menu to navigate through your management tools.</p>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toggle Dropdown JS -->
+  <script>
+    feather.replace();
+
+    document.getElementById('notifBtn').addEventListener('click', function () {
+      document.getElementById('notifDropdown').classList.toggle('hidden');
+    });
+
+    document.getElementById('profileBtn').addEventListener('click', function () {
+      document.getElementById('profileDropdown').classList.toggle('hidden');
+    });
+  </script>
 </body>
 </html>

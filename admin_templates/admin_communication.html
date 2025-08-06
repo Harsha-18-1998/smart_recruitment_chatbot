@@ -1,76 +1,102 @@
-{% extends "admin_base.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Communication Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    function toggleSection(id) {
+      const section = document.getElementById(id);
+      section.classList.toggle("hidden");
+    }
+  </script>
+</head>
+<body class="bg-gradient-to-r from-indigo-50 to-blue-50 min-h-screen p-6 font-sans">
 
-{% block content %}
-<h2 class="mb-4">Communication Center</h2>
+  <div class="max-w-5xl mx-auto space-y-8">
+    <h1 class="text-4xl font-bold text-indigo-800 mb-6 border-b pb-2">📬 Communication Center</h1>
 
-<div class="row">
-  <!-- Send Email -->
-  <div class="col-md-6">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Send Email to Candidate</h5>
-        <form>
-          <div class="mb-3">
-            <label class="form-label">Candidate Email</label>
-            <input type="email" class="form-control" placeholder="example@email.com" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Subject</label>
-            <input type="text" class="form-control" placeholder="Interview Invitation">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Message</label>
-            <textarea class="form-control" rows="4" placeholder="Write your message here..."></textarea>
-          </div>
-          <button type="submit" class="btn btn-primary">Send Email</button>
-        </form>
+    <!-- Section Template -->
+    <div class="bg-white shadow-xl rounded-xl overflow-hidden border border-indigo-100 transition hover:shadow-2xl duration-300">
+
+      <!-- 1. Send Email to Candidate -->
+      <div class="p-6 border-b border-indigo-100">
+        <button onclick="toggleSection('emailSection')" class="flex items-center justify-between w-full text-left text-xl font-semibold text-indigo-700 hover:text-indigo-900 transition duration-300">
+          <span>📧 1. Send Email to Candidate</span>
+          <svg class="w-6 h-6 ml-2 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="emailSection" class="mt-5 hidden">
+          <form class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700">Candidate Email</label>
+              <input type="email" class="w-full mt-1 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="example@email.com">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700">Subject</label>
+              <input type="text" class="w-full mt-1 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" placeholder="Interview Invitation">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700">Message</label>
+              <textarea class="w-full mt-1 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-400" rows="4" placeholder="Write your message here..."></textarea>
+            </div>
+            <button type="submit" class="bg-indigo-600 text-white px-6 py-2 rounded-md font-medium hover:bg-indigo-700 transition duration-300">Send Email</button>
+          </form>
+        </div>
       </div>
+
+      <!-- 2. Schedule Interview -->
+      <div class="p-6 border-b border-indigo-100">
+        <button onclick="toggleSection('interviewSection')" class="flex items-center justify-between w-full text-left text-xl font-semibold text-green-700 hover:text-green-900 transition duration-300">
+          <span>📅 2. Schedule Interview</span>
+          <svg class="w-6 h-6 ml-2 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="interviewSection" class="mt-5 hidden">
+          <form class="space-y-4">
+            <div>
+              <label class="block text-sm font-semibold text-gray-700">Candidate Name</label>
+              <input type="text" class="w-full mt-1 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="John Doe">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700">Date & Time</label>
+              <input type="datetime-local" class="w-full mt-1 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold text-gray-700">Meeting Link</label>
+              <input type="url" class="w-full mt-1 px-4 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400" placeholder="https://meet.example.com/xyz">
+            </div>
+            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-md font-medium hover:bg-green-700 transition duration-300">Schedule</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- 3. Recent Messages -->
+      <div class="p-6">
+        <button onclick="toggleSection('messagesSection')" class="flex items-center justify-between w-full text-left text-xl font-semibold text-purple-700 hover:text-purple-900 transition duration-300">
+          <span>📨 3. Recent Messages</span>
+          <svg class="w-6 h-6 ml-2 transition-transform transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </button>
+        <div id="messagesSection" class="mt-5 hidden space-y-4">
+          <div class="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-md shadow">
+            <p><strong>To:</strong> john@example.com</p>
+            <p><strong>Subject:</strong> Interview Confirmation</p>
+            <p><strong>Sent on:</strong> July 29, 2025</p>
+          </div>
+          <div class="bg-purple-50 border-l-4 border-purple-400 p-4 rounded-md shadow">
+            <p><strong>To:</strong> alice@example.com</p>
+            <p><strong>Subject:</strong> Application Status</p>
+            <p><strong>Sent on:</strong> July 27, 2025</p>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
-
-  <!-- Schedule Interview -->
-  <div class="col-md-6">
-    <div class="card mb-4">
-      <div class="card-body">
-        <h5 class="card-title">Schedule Interview</h5>
-        <form>
-          <div class="mb-3">
-            <label class="form-label">Candidate Name</label>
-            <input type="text" class="form-control" placeholder="John Doe" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Date & Time</label>
-            <input type="datetime-local" class="form-control">
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Meeting Link</label>
-            <input type="url" class="form-control" placeholder="https://meet.example.com/xyz">
-          </div>
-          <button type="submit" class="btn btn-success">Schedule</button>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- Message History -->
-<div class="card">
-  <div class="card-body">
-    <h5 class="card-title">Recent Messages</h5>
-    <ul class="list-group">
-      <li class="list-group-item">
-        <strong>To:</strong> john@example.com &nbsp; | &nbsp;
-        <strong>Subject:</strong> Interview Confirmation
-        <br>
-        <small class="text-muted">Sent on: July 29, 2025</small>
-      </li>
-      <li class="list-group-item">
-        <strong>To:</strong> alice@example.com &nbsp; | &nbsp;
-        <strong>Subject:</strong> Application Status
-        <br>
-        <small class="text-muted">Sent on: July 27, 2025</small>
-      </li>
-    </ul>
-  </div>
-</div>
-{% endblock %}
+</body>
+</html>

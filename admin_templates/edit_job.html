@@ -1,0 +1,23 @@
+<!-- templates/admin_edit_job.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Job</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 p-10">
+    <div class="max-w-2xl mx-auto bg-white p-6 rounded shadow">
+        <h1 class="text-xl font-bold mb-4">Edit Job - {{ job['Title'] }}</h1>
+        <form method="POST" action="/admin/edit_job" class="grid grid-cols-1 gap-4">
+            <input type="hidden" name="job_id" value="{{ job['Job ID'] }}">
+            <input name="title" value="{{ job['Title'] }}" class="border p-2 rounded" required>
+            <input name="company" value="{{ job['Company'] }}" class="border p-2 rounded" required>
+            <input name="location" value="{{ job['Location'] }}" class="border p-2 rounded" required>
+            <input name="skills" value="{{ job['Skills'] }}" class="border p-2 rounded" required>
+            <textarea name="description" class="border p-2 rounded" required>{{ job['Description'] }}</textarea>
+            <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Update Job</button>
+        </form>
+    </div>
+</body>
+</html>
