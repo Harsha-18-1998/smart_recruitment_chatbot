@@ -1,21 +1,30 @@
+import os
+import re
 import pandas as pd
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import TreebankWordTokenizer
+from docx import Document
+from pdfminer.high_level import extract_text as extract_pdf_text
 
-nltk.download('stopwords')
+# ✅ Load skills directly from job_dataset.csv
+job_data = pd.read_csv('data/job_dataset.csv')  # Adjust path if needed
 
-tokenizer = TreebankWordTokenizer()
+# Get all skills into a flat list
+skills_list = job_data['Skills'].dropna().apply(lambda x: [s.strip() for s in x.split(',')])
+all_skills = sorted(set([skill for sublist in skills_list for skill in sublist]))
 
-# Load skill dataset
-skills_df = pd.read_csv("data/job_skills.csv")
-all_skills = skills_df.iloc[:, 0].dropna().astype(str).str.lower().tolist()
+def extract_text(file_path):
+    if file_path.endswith('.pdf'):
+        return extract_pdf_text(file_path)
+    elif file_path.endswith('.docx'):
+        doc = Document(file_path)
+        return "\n".join([para.text for para in doc.paragraphs])
+    else:
+        return ""
 
-def extract_skills(resume_text):
-    stop_words = set(stopwords.words('english'))
-    tokens = tokenizer.tokenize(resume_text.lower())
-    tokens = [word for word in tokens if word.isalpha() and word not in stop_words]
-
-    extracted_skills = [token for token in tokens if token in all_skills]
-
-    return list(set(extracted_skills))
+def extract_skills(text):
+    extracted_skills = set()
+    text = text.lower()
+    for skill in all_skills:
+        pattern = re.escape(skill.lower())
+        if re.search(r'\b' + pattern + r'\b', text):
+            extracted_skills.add(skill)
+    return list(extracted_skills)
