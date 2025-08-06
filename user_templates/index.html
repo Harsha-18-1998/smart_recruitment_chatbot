@@ -87,10 +87,8 @@
 <nav>
     <div class="logo">SmartRecruit</div>
     <div class="nav-links">
-        <a href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
         <a href="{{ url_for('login') }}">Login</a>
-        <a href="{{ url_for('signup') }}"><i class="fas fa-user-plus"></i> Register</a>
-        <a href="{{ url_for('register') }}">Register</a>
+        <a href="{{ url_for('signup') }}">Register</a>
     </div>
 </nav>
 
@@ -114,67 +112,3 @@
 </html>
 
 
-<!-- <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Smart Recruitment Chatbot</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .navbar {
-            background-color: #007bff;
-        }
-        .navbar-brand, .nav-link {
-            color: white !important;
-        }
-        .hero {
-            padding: 100px 0;
-            text-align: center;
-            background-color: #e9ecef;
-        }
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-        }
-        .btn-custom {
-            padding: 10px 20px;
-            font-size: 1.1rem;
-        }
-    </style>
-</head>
-<body>
-
-<nav class="navbar navbar-expand-lg">
-    <div class="container">
-        <a class="navbar-brand" href="{{ url_for('index') }}">SmartRecruit</a>
-        <div class="collapse navbar-collapse justify-content-end">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('register') }}"><i class="fas fa-user-plus"></i> Register</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{ url_for('login') }}"><i class="fas fa-sign-in-alt"></i> Login</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-<section class="hero">
-    <div class="container">
-        <h1>Welcome to Smart Recruitment Chatbot</h1>
-        <p>Let our AI help you find the right job and improve your resume with smart suggestions.</p>
-        <a href="{{ url_for('login') }}" class="btn btn-primary btn-custom">Get Started</a>
-    </div>
-</section>
-
-</body>
-</html> -->

@@ -25,3 +25,7 @@ bcrypt==4.1.2
 python-dotenv
 requests
 werkzeug
+python-docx
+pdfminer
+pdfminer.six
+httpx

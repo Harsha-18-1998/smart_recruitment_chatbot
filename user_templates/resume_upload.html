@@ -1,4 +1,4 @@
-<!-- user_templates/upload_resume.html -->
+<!-- user_templates/resume_upload.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,10 +9,10 @@
 <body>
     <div class="container mt-5">
         <h2>Upload Your Resume</h2>
-        <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload_resume') }}">
+        <form method="POST" enctype="multipart/form-data" action="{{ url_for('resume_upload') }}">
             <div class="mb-3">
                 <label for="resume" class="form-label">Choose a Resume File (PDF or TXT)</label>
-                <input class="form-control" type="file" name="resume" id="resume" required accept=".pdf,.txt">
+                <input class="form-control" type="file" name="resume" id="resume" required accept=".pdf,.txt,.docx">
             </div>
             <button type="submit" class="btn btn-primary">Upload</button>
         </form>

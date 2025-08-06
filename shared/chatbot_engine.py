@@ -11,25 +11,26 @@ OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 # Rule-Based Responses
 # -----------------------
 def get_rule_based_reply(msg: str) -> str | None:
-    msg = msg.lower()
+    msg = msg.lower().strip()
 
-    if any(kw in msg for kw in ["hi", "hello", "hey"]):
+    greetings = ["hi", "hello", "hey"]
+    # Match exact greetings or greetings as individual words (avoid partial matches)
+    if any(kw == msg or kw in msg.split() for kw in greetings):
         return "Hello! I’m your recruitment assistant. How can I help you today?"
 
-    elif "match" in msg and "job" in msg:
+    if "match" in msg and "job" in msg:
         return "Sure! Upload your resume to get matched with the most relevant jobs based on your skills."
 
-    elif "apply" in msg:
+    if "apply" in msg:
         return "To apply for a job, just upload your resume and we’ll find the best matches for you."
 
-    elif "job openings" in msg or "available jobs" in msg:
+    if "job openings" in msg or "available jobs" in msg:
         return get_available_jobs()
 
-    elif "bye" in msg:
+    if "bye" in msg or "goodbye" in msg:
         return "Goodbye! Let me know if you need any help later."
 
     return None  # unknown intent
-
 
 def get_available_jobs() -> str:
     try:
@@ -47,7 +48,6 @@ def get_available_jobs() -> str:
             return "There are no jobs listed at the moment."
     except:
         return "Oops! Something went wrong while fetching job listings."
-
 
 # -----------------------
 # Fallback to LLM
@@ -78,7 +78,6 @@ def get_ai_reply(user_msg: str) -> str:
 
     except Exception as e:
         return f"Chatbot Error: {str(e)}"
-
 
 # -----------------------
 # Main Handler

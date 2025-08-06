@@ -1,0 +1,51 @@
+Questions
+What are MSE and RMSE
+Explain DBSCAN algorithm
+What are dummy variables
+What is anomaly detection
+What is Bayesian inference
+What is the R-Suared value
+What about ordinal features
+Loss functions in regression
+What are Recommender Systems
+Undersampling vs Oversampling
+What is reinforcement learning
+Do we call Knn a lazy algorithm
+Define a Monte Carlo simulation
+Does Kmeans and Kmeans++ is same
+What is pruning in Decision Tree
+How does an XGB control overfitting
+What is the class imbalance problem
+Why is lightGBM prone to overfitting
+Name any one distance based algorithm
+What is the objective function for Knn
+What is the standard error of the mean
+What are some disadvantages of K-means
+What is data augmentation Give examples
+What is Euclidean and Manhatten distance
+What is the role of gamma in RBF kernels
+How would you handle an imbalanced dataset
+Is it a good idea to combine multiple trees
+How do support vector machine algorithms work
+What is the significance of Residual Networks
+What does it mean to have low MAE and high MSE
+What are the disadvantages of linear regression
+What is a recommendation engine How does it work
+What is K-means How can you select K for K-means
+Does Radial basis kernel function is there in SVM
+What is linear regression Why is it called linear
+Is pruning always a good method to construct a tree
+What is the difference between bagging and boosting
+Which algorithm uses margin to classify the classes
+What algorithm can be used to summarize twitter feed
+How do you generate arbitrary or random shape clusters
+How to compute standard error of median in a simple way
+How does GBDTs decide to split a node What does it minimize
+What is the difference between R-suare and Adjusted R-suare
+How is matrix factorization useful in recommendation systems
+What are the approximation methods in Reinforcement Learning
+What is the difference between an error and a residual error
+Why does training an SVM takes a long time How can I speed up
+Difference between bagging boosting and the relation to bayes theorem
+Which algorithm takes the data to the next dimension and then classify
+What are categorical variables and what do we do with categorical variables

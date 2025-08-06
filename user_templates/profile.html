@@ -30,19 +30,19 @@
       <div class="d-flex align-items-center mb-4">
         <div class="profile-pic"></div>
         <div>
-          <h4>{{ user.username }}</h4>
-          <small>Email: {{ user.username }}</small>
+          <h4>{{ username }}</h4>
+          <small>Email: {{ email }}</small>
         </div>
       </div>
 
       <form method="POST">
         <div class="mb-3">
           <label for="name" class="form-label">Username</label>
-          <input type="text" class="form-control" name="name" value="{{ user.username }}" required>
+          <input type="text" class="form-control" name="name" value="{{ username }}" required>
         </div>
         <div class="mb-3">
           <label for="email" class="form-label">Email (optional)</label>
-          <input type="email" class="form-control" name="email" value="{{ user.username }}">
+          <input type="email" class="form-control" name="email" value="{{ email }}">
         </div>
         <button type="submit" class="btn btn-primary">Update Profile</button>
       </form>
