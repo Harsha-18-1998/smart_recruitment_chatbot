@@ -12,14 +12,10 @@
     }
 
     window.onload = function() {
-      {% if not interview_started %}
+      // {% if not interview_started %}
         document.getElementById('role-select').style.display = 'none';
         document.getElementById('subject-select').style.display = 'none';
-      {% else %}
-        // If interview started, no need to show selectors
-        document.getElementById('role-select').style.display = 'none';
-        document.getElementById('subject-select').style.display = 'none';
-      {% endif %}
+      // {% endif %}
     }
   </script>
 </head>
@@ -27,7 +23,10 @@
 <div class="container mt-5">
   <h2>Mock Interview</h2>
 
-  {% if not interview_started %}
+  <!-- =========================== -->
+  <!-- STAGE 1: START INTERVIEW FORM -->
+  <!-- =========================== -->
+  {% if not interview_started and not interview_complete %}
     <form method="POST" action="{{ url_for('mock_interview') }}">
       <div class="mb-3">
         <label class="form-label">Choose filter type:</label><br />
@@ -65,8 +64,10 @@
       <button type="submit" class="btn btn-primary">Start Interview</button>
     </form>
 
-  {% else %}
-    <!-- Display question and answer form -->
+  <!-- =========================== -->
+  <!-- STAGE 2: QUESTION + ANSWER FORM -->
+  <!-- =========================== -->
+  {% elif interview_started and not interview_complete %}
     <div class="card mt-4">
       <div class="card-header">
         Question {{ current_index + 1 }} of {{ total_questions }}
@@ -83,6 +84,38 @@
           <a href="{{ url_for('mock_interview_reset') }}" class="btn btn-danger ms-2">Reset Interview</a>
         </form>
       </div>
+    </div>
+
+  <!-- =========================== -->
+  <!-- STAGE 3: FINAL SUMMARY -->
+  <!-- =========================== -->
+  {% elif interview_complete %}
+    <div class="alert alert-success mt-4">
+      <h4 class="alert-heading">Interview Complete!</h4>
+      <p>Here's a summary of your responses and feedback:</p>
+    </div>
+
+    {% for item in feedback %}
+      <div class="card mt-3">
+        <div class="card-header">
+          Question {{ loop.index }}
+        </div>
+        <div class="card-body">
+          <p><strong>Q:</strong> {{ item.question }}</p>
+          <p><strong>Your Answer:</strong><br>{{ item.answer }}</p>
+
+          {% if item.evaluation %}
+            <hr>
+            <p><strong>Score:</strong> {{ item.evaluation.score }} / 10</p>
+            <p><strong>Strengths:</strong> {{ item.evaluation.strengths }}</p>
+            <p><strong>Suggestions:</strong> {{ item.evaluation.suggestions }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+
+    <div class="mt-4">
+      <a href="{{ url_for('mock_interview_reset') }}" class="btn btn-primary">Restart Interview</a>
     </div>
   {% endif %}
 
