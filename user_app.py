@@ -9,7 +9,8 @@ from dotenv import load_dotenv
 from shared.resume_parser import extract_skills, extract_text
 from shared.db_config import get_db_connection
 from shared.chatbot_engine import get_job_info_reply
-from shared.mock_interview_engine import load_questions  # Should be updated to accept role + subject
+from shared.mock_interview_engine import load_questions  
+from shared.answer_evaluator import evaluate_answer
 
 # Setup Flask and SocketIO
 app = Flask(__name__, template_folder='user_templates')
@@ -187,7 +188,6 @@ def mock_interview():
         return redirect(url_for('login'))
 
     if request.method == 'POST':
-        # Determine if user selected role or subject
         choice = request.form.get('choice')
         role = None
         subject = None
@@ -205,7 +205,6 @@ def mock_interview():
             flash("Please select either Job Role or Subject.")
             return redirect(url_for('mock_interview'))
 
-        # Load questions based on either role or subject
         questions = load_questions(role=role, subject=subject)
         if not questions:
             flash("No questions found for your selection.")
@@ -216,12 +215,14 @@ def mock_interview():
         session['mock_questions'] = questions
         session['mock_index'] = 0
         session['mock_answers'] = []
+        session['mock_feedback'] = []
 
         return redirect(url_for('mock_interview_question'))
 
     return render_template(
         'mock_interview.html',
         interview_started=False,
+        interview_complete=False,
         selected_role=session.get('mock_role'),
         selected_subject=session.get('mock_subject')
     )
@@ -236,6 +237,7 @@ def mock_interview_question():
     questions = session.get('mock_questions')
     index = session.get('mock_index', 0)
     answers = session.get('mock_answers', [])
+    feedback = session.get('mock_feedback', [])
     role = session.get('mock_role')
     subject = session.get('mock_subject')
 
@@ -243,11 +245,14 @@ def mock_interview_question():
         flash("Start interview by selecting a role or subject.")
         return redirect(url_for('mock_interview'))
 
+    question = questions[index] if index < len(questions) else None
+    evaluation = None
+
     if request.method == 'POST':
         answer = request.form.get('answer', '').strip()
+
         if not answer:
             flash("Please provide an answer before continuing.")
-            question = questions[index]
             return render_template(
                 'mock_interview.html',
                 interview_started=True,
@@ -257,21 +262,31 @@ def mock_interview_question():
                 total_questions=len(questions),
                 question=question,
                 previous_answer='',
+                evaluation=None
             )
 
+        # ✅ Evaluate the answer using GPT
+        evaluation = evaluate_answer(question, answer)
+
+        # Save answer and evaluation
         answers.append(answer)
+        feedback.append(evaluation)
         session['mock_answers'] = answers
+        session['mock_feedback'] = feedback
+
+        # Move to next question after showing feedback
         index += 1
         session['mock_index'] = index
 
         if index >= len(questions):
-            # Interview completed - show summary page
             return render_template('mock_interview_complete.html',
                                    role=role,
                                    subject=subject,
-                                   answers=answers)
+                                   answers=answers,
+                                   feedback=feedback)
 
-    question = questions[index] if index < len(questions) else None
+        # Load next question
+        question = questions[index]
 
     return render_template('mock_interview.html',
                            interview_started=True,
@@ -280,7 +295,9 @@ def mock_interview_question():
                            current_index=index,
                            total_questions=len(questions),
                            question=question,
-                           previous_answer='')
+                           previous_answer='',
+                           evaluation=evaluation)
+
 
 
 @app.route('/mock_interview/reset')
