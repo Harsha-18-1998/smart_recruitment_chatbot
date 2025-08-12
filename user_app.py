@@ -11,32 +11,38 @@ from shared.db_config import get_db_connection
 from shared.chatbot_engine import get_job_info_reply
 from shared.mock_interview_engine import load_questions  
 from shared.answer_evaluator import evaluate_answer
+from flask_session import Session
 
-# Setup Flask and SocketIO
+# ---------------- Setup ----------------
 app = Flask(__name__, template_folder='user_templates')
 
-# Setup nltk path
+# Configure Flask-Session
+app.config['SESSION_TYPE'] = 'filesystem'  # server-side session storage
+app.config['SESSION_FILE_DIR'] = './flask_session_dir'
+app.config['SESSION_PERMANENT'] = False
+Session(app)
+
+# NLTK path for local packages
 nltk.data.path.append(os.path.join(os.path.dirname(__file__), 'nltk_data'))
 
-# Load environment variables
+# Load env variables
 load_dotenv()
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 FLASK_SECRET_KEY = os.getenv("FLASK_SECRET_KEY", "defaultsecret")
-RENDER_URL = os.getenv("RENDER_EXTERNAL_URL", "https://your-app.onrender.com")
-
 app.config['SECRET_KEY'] = FLASK_SECRET_KEY
+
+# SocketIO
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
 
 @app.context_processor
 def inject_now():
     return {'now': datetime.now()}
 
-# ---------------- ROUTES ----------------
-
+# ---------------- Routes ----------------
 @app.route('/')
 def index():
     return render_template('index.html')
 
+# ----- Auth -----
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
@@ -65,8 +71,10 @@ def signup():
             return redirect(url_for('signup'))
 
         hashed_password = generate_password_hash(password)
-        cursor.execute("INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
-                       (username, email, hashed_password))
+        cursor.execute(
+            "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
+            (username, email, hashed_password)
+        )
         conn.commit()
         cursor.close()
         conn.close()
@@ -75,6 +83,7 @@ def signup():
         return redirect(url_for('login'))
 
     return render_template('signup.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -100,18 +109,23 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/logout')
 def logout():
     session.clear()
     flash("Logged out successfully.")
     return redirect(url_for('index'))
 
+
 @app.route('/dashboard')
 def user_dashboard():
     if 'username' not in session:
         flash("Login required.")
         return redirect(url_for('login'))
-    return render_template('user_dashboard.html', username=session['username'], email=session['email'])
+    return render_template('user_dashboard.html',
+                           username=session['username'],
+                           email=session['email'])
+
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -134,8 +148,11 @@ def profile():
         session['email'] = new_email
         flash("Profile updated.")
 
-    return render_template('profile.html', username=session.get('username'), email=session.get('email'))
+    return render_template('profile.html',
+                           username=session.get('username'),
+                           email=session.get('email'))
 
+# ----- Resume Upload -----
 @app.route('/resume_upload', methods=['GET', 'POST'])
 def resume_upload():
     if request.method == 'POST':
@@ -156,7 +173,6 @@ def resume_upload():
         resume_skills = extract_skills(text)
 
         job_df = pd.read_csv('data/job_dataset.csv')
-
         matched_jobs = set()
         for _, row in job_df.iterrows():
             job_skills = [s.strip().lower() for s in row['Skills'].split(',')]
@@ -164,14 +180,13 @@ def resume_upload():
             if match_count > 0:
                 matched_jobs.add(row['Job Title'])
 
-        matched_jobs = list(matched_jobs)
-
         return render_template('resume_result.html',
                                skills=resume_skills,
-                               matched_jobs=matched_jobs)
+                               matched_jobs=list(matched_jobs))
 
     return render_template('resume_upload.html')
 
+# ----- Chatbot -----
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.get_json()
@@ -179,8 +194,7 @@ def chat():
     reply = get_job_info_reply(user_message)
     return jsonify({'reply': reply})
 
-# ---------------- Mock Interview UI ----------------
-
+# ----- Mock Interview -----
 @app.route('/mock_interview', methods=['GET', 'POST'])
 def mock_interview():
     if 'username' not in session:
@@ -189,20 +203,14 @@ def mock_interview():
 
     if request.method == 'POST':
         choice = request.form.get('choice')
-        role = None
-        subject = None
-        if choice == 'role':
-            role = request.form.get('role')
-            if not role:
-                flash("Please select a Job Role.")
-                return redirect(url_for('mock_interview'))
-        elif choice == 'subject':
-            subject = request.form.get('subject')
-            if not subject:
-                flash("Please select a Subject.")
-                return redirect(url_for('mock_interview'))
-        else:
-            flash("Please select either Job Role or Subject.")
+        role = request.form.get('role') if choice == 'role' else None
+        subject = request.form.get('subject') if choice == 'subject' else None
+
+        if choice == 'role' and not role:
+            flash("Please select a Job Role.")
+            return redirect(url_for('mock_interview'))
+        if choice == 'subject' and not subject:
+            flash("Please select a Subject.")
             return redirect(url_for('mock_interview'))
 
         questions = load_questions(role=role, subject=subject)
@@ -219,13 +227,9 @@ def mock_interview():
 
         return redirect(url_for('mock_interview_question'))
 
-    return render_template(
-        'mock_interview.html',
-        interview_started=False,
-        interview_complete=False,
-        selected_role=session.get('mock_role'),
-        selected_subject=session.get('mock_subject')
-    )
+    return render_template('mock_interview.html',
+                           interview_started=False,
+                           interview_complete=False)
 
 
 @app.route('/mock_interview/question', methods=['GET', 'POST'])
@@ -245,68 +249,55 @@ def mock_interview_question():
         flash("Start interview by selecting a role or subject.")
         return redirect(url_for('mock_interview'))
 
-    question = questions[index] if index < len(questions) else None
+    # If all questions answered, show summary
+    if index >= len(questions):
+        return render_template('mock_interview.html',
+                               interview_started=False,
+                               interview_complete=True,
+                               answers=answers,
+                               feedback=feedback,
+                               selected_role=role,
+                               selected_subject=subject)
+
+    question = questions[index]
     evaluation = None
+    previous_answer = ""
 
     if request.method == 'POST':
         answer = request.form.get('answer', '').strip()
-
         if not answer:
             flash("Please provide an answer before continuing.")
-            return render_template(
-                'mock_interview.html',
-                interview_started=True,
-                selected_role=role,
-                selected_subject=subject,
-                current_index=index,
-                total_questions=len(questions),
-                question=question,
-                previous_answer='',
-                evaluation=None
-            )
+            previous_answer = request.form.get('answer', '')
+        else:
+            evaluation = evaluate_answer(question, answer)
 
-        # ✅ Evaluate the answer using GPT
-        evaluation = evaluate_answer(question, answer)
+            answers.append(answer)
+            feedback.append(evaluation)
 
-        # Save answer and evaluation
-        answers.append(answer)
-        feedback.append(evaluation)
-        session['mock_answers'] = answers
-        session['mock_feedback'] = feedback
+            session['mock_answers'] = answers
+            session['mock_feedback'] = feedback
 
-        # Move to next question after showing feedback
-        index += 1
-        session['mock_index'] = index
+            session['mock_index'] = index + 1
 
-        if index >= len(questions):
-            return render_template('mock_interview_complete.html',
-                                   role=role,
-                                   subject=subject,
-                                   answers=answers,
-                                   feedback=feedback)
-
-        # Load next question
-        question = questions[index]
+            return redirect(url_for('mock_interview_question'))
 
     return render_template('mock_interview.html',
                            interview_started=True,
-                           selected_role=role,
-                           selected_subject=subject,
+                           interview_complete=False,
                            current_index=index,
                            total_questions=len(questions),
                            question=question,
-                           previous_answer='',
-                           evaluation=evaluation)
-
+                           previous_answer=previous_answer,
+                           evaluation=evaluation,
+                           selected_role=role,
+                           selected_subject=subject)
 
 
 @app.route('/mock_interview/reset')
 def mock_interview_reset():
-    session.pop('mock_role', None)
-    session.pop('mock_subject', None)
-    session.pop('mock_questions', None)
-    session.pop('mock_index', None)
-    session.pop('mock_answers', None)
+    for key in ['mock_role', 'mock_subject', 'mock_questions',
+                'mock_index', 'mock_answers', 'mock_feedback']:
+        session.pop(key, None)
     flash("Mock interview session reset.")
     return redirect(url_for('mock_interview'))
 
