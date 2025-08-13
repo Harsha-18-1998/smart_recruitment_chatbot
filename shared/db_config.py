@@ -1,10 +1,13 @@
 import mysql.connector
+import os
+from dotenv import load_dotenv
+import sqlite3
+load_dotenv()
 
 def get_db_connection():
     return mysql.connector.connect(
-        host="sql12.freesqldatabase.com",
-        user="sql12792866",
-        password="l8299HMdQ9",
-        database="sql12792866",
-        port=3306
+        host=os.getenv("DB_HOST", "localhost"),
+        user=os.getenv("DB_USER", "root"),
+        password=os.getenv("DB_PASSWORD", ""),
+        database=os.getenv("DB_NAME", "smart_recruitment_chatbot")
     )

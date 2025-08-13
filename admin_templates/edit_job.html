@@ -11,11 +11,11 @@
         <h1 class="text-xl font-bold mb-4">Edit Job - {{ job['Title'] }}</h1>
         <form method="POST" action="/admin/edit_job" class="grid grid-cols-1 gap-4">
             <input type="hidden" name="job_id" value="{{ job['Job ID'] }}">
-            <input name="title" value="{{ job['Title'] }}" class="border p-2 rounded" required>
-            <input name="company" value="{{ job['Company'] }}" class="border p-2 rounded" required>
-            <input name="location" value="{{ job['Location'] }}" class="border p-2 rounded" required>
-            <input name="skills" value="{{ job['Skills'] }}" class="border p-2 rounded" required>
-            <textarea name="description" class="border p-2 rounded" required>{{ job['Description'] }}</textarea>
+            <input name="title" value="{{ job['Title'] }}"placeholder="Job title" class="border p-2 rounded" required>
+            <input name="company" value="{{ job['Company'] }}"placeholder="company" class="border p-2 rounded" required>
+            <input name="location" value="{{ job['Location'] }}" placeholder="location" class="border p-2 rounded" required>
+            <input name="skills" value="{{ job['Skills'] }}" placeholder="Skills" class="border p-2 rounded" required>
+            <textarea name="description" placeholder="description" class="border p-2 rounded" required>{{ job['Description'] }}</textarea>
             <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Update Job</button>
         </form>
     </div>

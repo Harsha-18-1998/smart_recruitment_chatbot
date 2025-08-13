@@ -68,20 +68,21 @@
                     {% endwith %}
 
                     <form method="POST" action="{{ url_for('admin_login') }}">
-                        <div class="mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" required autofocus>
-                        </div>
+                        <input type="email" name="email" placeholder="Email" required><br>
+                        <input type="password" name="password" placeholder="Password" required><br>
 
-                        <div class="mb-3">
-                            <label for="password" class="form-label">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" required>
-                        </div>
+                        {% if error %}
+                            <p style="color: red;">{{ error }}</p>
+                        {% endif %}
 
-                        <div class="d-grid">
-                            <button type="submit" class="btn btn-primary">Login</button>
-                        </div>
+                        <button type="submit">Login</button>
                     </form>
+
+                        <!-- Sign Up Redirect -->
+                        <p>Don't have an account?
+                            <a href="{{ url_for('admin_signup') }}">Sign Up</a>
+                        </p>
+
 
                 </div>
             </div>

@@ -51,6 +51,18 @@
             transition: 0.3s ease-in-out;
         }
 
+        .btn-signup {
+            margin-top: 35px;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 50px;
+            background-color: #ffc107;
+            color: #000;
+            font-weight: 600;
+            border: none;
+            transition: 0.3s ease-in-out;
+        }
+
         .btn-login:hover {
             background-color: #e0a800;
             color: white;
@@ -71,7 +83,7 @@
         <h1>Smart Recruit Admin Portal</h1>
         <p>Manage job listings, candidates, pipelines, and analytics – all in one place.</p>
         <a href="{{ url_for('admin_login') }}" class="btn btn-login">Admin Login</a>
-        <a href="{{ url_for('admin_login') }}" class="btn btn-login">Admin sign up</a>
+        <a href="{{ url_for('admin_signup') }}" class="btn btn-signup">Admin sign up</a>
     </div>
 
     <!-- Footer -->
