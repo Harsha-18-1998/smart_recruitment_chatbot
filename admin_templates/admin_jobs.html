@@ -24,9 +24,9 @@
             <thead class="bg-gray-100">
                 <tr>
                     <th class="p-3 text-left">Job ID</th>
-                    <th class="p-3 text-left">Title</th>
-                    <th class="p-3 text-left">Company</th>
-                    <th class="p-3 text-left">Location</th>
+                    <th class="p-3 text-left"> Job Title</th>
+                    <!--<th class="p-3 text-left">Company</th>
+                    <th class="p-3 text-left">Location</th>-->
                     <th class="p-3 text-left">Actions</th>
                 </tr>
             </thead>
@@ -34,9 +34,9 @@
                 {% for job in jobs %}
                 <tr class="border-t">
                     <td class="p-3">{{ job['JobID'] }}</td>
-                    <td class="p-3">{{ job['Title'] }}</td>
-                    <td class="p-3">{{ job['Company'] }}</td>
-                    <td class="p-3">{{ job['Location'] }}</td>
+                    <td class="p-3">{{ job['Job Title'] }}</td>
+                    <!--<td class="p-3">{{ job['Company'] }}</td>
+                    <td class="p-3">{{ job['Location'] }}</td>-->
                     <td class="p-3 space-x-2">
                             
                             <form action="{{ url_for('delete_job', job_id=job['JobID']) }}" method="post" style="display:inline;">

@@ -2,101 +2,387 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard - Smart Recruit</title>
-
-  <!-- Tailwind CSS CDN -->
+  
   <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- Heroicons for icons -->
   <script src="https://unpkg.com/feather-icons"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+    }
+
+    .glass-card {
+      backdrop-filter: blur(20px);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-link {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .nav-link:hover::before {
+      left: 100%;
+    }
+
+    .active-nav {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-weight: 600;
+    }
+
+    .stat-card {
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .chart-container {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+    }
+
+    .task-item {
+      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .task-item:hover {
+      transform: translateX(8px);
+      background: rgba(255, 255, 255, 1);
+    }
+
+    .floating-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+      transition: all 0.3s ease;
+    }
+
+    .floating-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+    }
+
+    .main-content {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(20px);
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans leading-normal tracking-normal">
+<body class="antialiased">
 
-  <!-- Sidebar -->
-  <div class="flex h-screen">
-    <div class="w-64 bg-white shadow-md">
-      <div class="p-6 text-xl font-bold text-blue-700 border-b border-gray-200">Smart Recruit</div>
-      <nav class="mt-4">
-        <a href="/admin/candidates" class="flex items-center px-6 py-3 hover:bg-gray-200">
-          <i data-feather="users" class="mr-3"></i> Candidate Management
-        </a>
-        <a href="/admin/jobs" class="flex items-center px-6 py-3 hover:bg-gray-200">
-          <i data-feather="briefcase" class="mr-3"></i> Job Management
-        </a>
-        <a href="/admin/analytics" class="flex items-center px-6 py-3 hover:bg-gray-200">
-          <i data-feather="bar-chart-2" class="mr-3"></i> Analytics
-        </a>
-        <a href="/admin/communication" class="flex items-center px-6 py-3 hover:bg-gray-200">
-          <i data-feather="message-circle" class="mr-3"></i> Communication Center
-        </a>
-        <a href="/admin/logout" class="flex items-center px-6 py-3 text-red-600 hover:bg-red-100">
-          <i data-feather="log-out" class="mr-3"></i> Logout
-        </a>
-      </nav>
-    </div>
-
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
-      <!-- Topbar -->
-      <header class="bg-white border-b border-gray-200 shadow-sm p-4 flex justify-between items-center">
-        <div class="text-lg font-semibold text-gray-700">Dashboard</div>
-        <div class="flex items-center space-x-4">
-          <!-- Notification Bell -->
-          <div class="relative">
-            <button id="notifBtn" class="focus:outline-none">
-              <i data-feather="bell"></i>
-            </button>
-            <div id="notifDropdown" class="absolute right-0 mt-2 w-64 bg-white border rounded-lg shadow-lg hidden z-50">
-              <div class="p-3 text-sm text-gray-700 font-semibold border-b">Recent Registrations</div>
-              <ul id="notifList" class="max-h-60 overflow-y-auto text-sm text-gray-600">
-                <li class="px-4 py-2 hover:bg-gray-100">No new notifications</li>
-              </ul>
-            </div>
-          </div>
-
-          <!-- Profile Dropdown -->
-          <div class="relative">
-            <button id="profileBtn" class="focus:outline-none flex items-center space-x-2">
-              <img src="https://via.placeholder.com/32" class="rounded-full" />
-              <span class="text-sm font-medium text-gray-700">Admin</span>
-            </button>
-            <div id="profileDropdown" class="absolute right-0 mt-2 w-56 bg-white border rounded-lg shadow-lg hidden z-50">
-              <div class="p-4">
-                <div class="font-semibold">Admin Profile</div>
-                <div class="text-sm text-gray-600 mt-1">admin@example.com</div>
-                <div class="mt-4">
-                  <button class="w-full text-left text-blue-600 hover:underline text-sm">Edit Profile</button>
-                </div>
-                <div class="mt-2">
-                  <a href="/admin/logout" class="w-full block text-left text-red-600 hover:underline text-sm">Logout</a>
-                </div>
-              </div>
-            </div>
+  <!-- Top Navigation -->
+  <nav class="glass-card sticky top-0 z-50 m-4 rounded-2xl">
+    <div class="px-6 py-4">
+      <div class="flex items-center justify-between">
+        <!-- Logo -->
+        <div class="flex items-center space-x-8">
+          
+            <h3 style="font-size:50px;">Smart Recruitment Chatbot</h3>
+          
+          
+          <!-- Navigation Links -->
+          <div class="hidden md:flex items-center space-x-1">
+            <a href="#" class="nav-link px-4 py-2 rounded-xl text-white active-nav transition-all duration-200">
+              <span class="flex items-center space-x-2">
+                <i data-feather="grid" class="w-4 h-4"></i>
+                <span>Dashboard</span>
+              </span>
+            </a>
+            <a href="/admin/jobs" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <span class="flex items-center space-x-2">
+                <i data-feather="briefcase" class="w-4 h-4"></i>
+                <span>Jobs</span>
+              </span>
+            </a>
+            <a href="/admin/candidates" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <span class="flex items-center space-x-2">
+                <i data-feather="users" class="w-4 h-4"></i>
+                <span>Candidates</span>
+              </span>
+            </a>
+            <a href="/admin/analytics" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <span class="flex items-center space-x-2">
+                <i data-feather="pie-chart" class="w-4 h-4"></i>
+                <span>Reports</span>
+              </span>
+            </a>
+            <a href="/admin/communication" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <span class="flex items-center space-x-2">
+                <i data-feather="mail" class="w-4 h-4"></i>
+                <span>Messages</span>
+              </span>
+            </a>
+            <a href="/admin/settings" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+              <span class="flex items-center space-x-2">
+                <i data-feather="settings" class="w-4 h-4"></i>
+                <span>Settings</span>
+              </span>
+            </a>
           </div>
         </div>
-      </header>
 
-      <!-- Dashboard Content Area -->
-      <main class="p-6">
-        <h2 class="text-2xl font-semibold text-gray-700">Welcome, {{ admin_email }}</h2>
-        <p class="text-gray-500 mt-2">Use the side menu to navigate through your management tools.</p>
-        <a href="{{ url_for('admin_logout') }}">Logout</a>
-      </main>
+        <!-- Right Side -->
+        <div class="flex items-center space-x-4">
+          <!-- Search -->
+          <div class="relative hidden sm:block">
+            <i data-feather="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60"></i>
+            <input type="text" placeholder="Search..." 
+                   class="w-64 pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30 backdrop-blur-sm">
+          </div>
+
+          <!-- New Job Button -->
+          <button class="floating-btn text-white font-semibold px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all duration-200">
+             <i data-feather="plus-circle" class="w-4 h-4"></i>
+             New Job
+          </button>
+
+          <!-- Notifications -->
+          <button class="text-white/80 hover:text-white focus:outline-none p-2 rounded-xl hover:bg-white/10 transition-all duration-200">
+            <i data-feather="bell" class="w-5 h-5"></i>
+          </button>
+
+          <!-- Profile -->
+          <button class="flex items-center space-x-3 focus:outline-none p-2 rounded-xl hover:bg-white/10 transition-all duration-200">
+            <img src="https://ui-avatars.com/api/?name=Admin+User&background=667eea&color=fff&font-size=0.5" 
+                 class="rounded-full w-8 h-8 ring-2 ring-white/30" />
+            <div class="text-left hidden lg:block">
+              <div class="font-semibold text-white text-sm">Admin User</div>
+              <div class="text-xs text-white/60">admin@example.com</div>
+            </div>
+          </button>
+
+          <!-- Mobile Menu Button -->
+          <button class="md:hidden text-white p-2 rounded-xl hover:bg-white/10">
+            <i data-feather="menu" class="w-5 h-5"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="main-content mx-4 mb-4 p-8">
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-white mb-2">Dashboard Overview</h1>
+      <p class="text-white/70">Welcome back! Here's what's happening with your recruitment today.</p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="stat-card p-6 rounded-2xl border-l-4 border-blue-500">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <span class="text-sm font-semibold text-gray-600">Total Applicants</span>
+            <p class="text-3xl font-bold text-gray-900 mt-1">1,284</p>
+            <div class="flex items-center mt-2">
+              <span class="text-green-500 text-sm font-medium">↗ 12%</span>
+              <span class="text-gray-500 text-sm ml-2">vs last month</span>
+            </div>
+          </div>
+          <div class="bg-blue-100 p-3 rounded-xl">
+            <i data-feather="users" class="text-blue-600 w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card p-6 rounded-2xl border-l-4 border-green-500">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <span class="text-sm font-semibold text-gray-600">Jobs Filled</span>
+            <p class="text-3xl font-bold text-gray-900 mt-1">26</p>
+            <div class="flex items-center mt-2">
+              <span class="text-green-500 text-sm font-medium">↗ 8%</span>
+              <span class="text-gray-500 text-sm ml-2">vs last month</span>
+            </div>
+          </div>
+          <div class="bg-green-100 p-3 rounded-xl">
+            <i data-feather="check-square" class="text-green-600 w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card p-6 rounded-2xl border-l-4 border-amber-500">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <span class="text-sm font-semibold text-gray-600">Pending Interviews</span>
+            <p class="text-3xl font-bold text-gray-900 mt-1">14</p>
+            <div class="flex items-center mt-2">
+              <span class="text-amber-500 text-sm font-medium">→ 0%</span>
+              <span class="text-gray-500 text-sm ml-2">vs last month</span>
+            </div>
+          </div>
+          <div class="bg-amber-100 p-3 rounded-xl">
+            <i data-feather="clock" class="text-amber-600 w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card p-6 rounded-2xl border-l-4 border-red-500">
+        <div class="flex justify-between items-start mb-4">
+          <div>
+            <span class="text-sm font-semibold text-gray-600">Rejected</span>
+            <p class="text-3xl font-bold text-gray-900 mt-1">102</p>
+            <div class="flex items-center mt-2">
+              <span class="text-red-500 text-sm font-medium">↘ 3%</span>
+              <span class="text-gray-500 text-sm ml-2">vs last month</span>
+            </div>
+          </div>
+          <div class="bg-red-100 p-3 rounded-xl">
+            <i data-feather="x-circle" class="text-red-600 w-6 h-6"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts and Tasks -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Chart -->
+      <div class="lg:col-span-2 chart-container p-6 rounded-2xl">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-gray-900">Candidates by Source</h3>
+          <div class="flex space-x-2">
+            <button class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">This Month</button>
+            <button class="px-3 py-1 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100">Last Month</button>
+          </div>
+        </div>
+        <div style="height: 350px;">
+           <canvas id="applicationChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Tasks -->
+      <div class="chart-container p-6 rounded-2xl">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-xl font-bold text-gray-900">Today's Tasks</h3>
+          <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">4 pending</span>
+        </div>
+        <div class="space-y-4">
+          <div class="task-item flex items-center p-4 rounded-xl border border-gray-200">
+            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+            <div class="ml-4 flex-1">
+              <p class="font-semibold text-gray-900">Review James Smith's portfolio</p>
+              <p class="text-sm text-gray-600">Senior Developer • Due in 2 hours</p>
+            </div>
+            <div class="bg-amber-100 text-amber-600 px-2 py-1 rounded text-xs font-medium">High</div>
+          </div>
+
+          <div class="task-item flex items-center p-4 rounded-xl border border-gray-200">
+            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+            <div class="ml-4 flex-1">
+              <p class="font-semibold text-gray-900">Call Maria Garcia for screening</p>
+              <p class="text-sm text-gray-600">UX Designer • Due today</p>
+            </div>
+            <div class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs font-medium">Medium</div>
+          </div>
+
+          <div class="task-item flex items-center p-4 rounded-xl border border-gray-200 opacity-60">
+            <input type="checkbox" checked class="h-5 w-5 rounded border-gray-300 text-gray-600 focus:ring-gray-500">
+            <div class="ml-4 flex-1">
+              <p class="font-semibold text-gray-900 line-through">Finalize job description</p>
+              <p class="text-sm text-gray-600">Marketing Lead • Completed</p>
+            </div>
+            <div class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-medium">Done</div>
+          </div>
+
+          <div class="task-item flex items-center p-4 rounded-xl border border-gray-200">
+            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+            <div class="ml-4 flex-1">
+              <p class="font-semibold text-gray-900">Schedule team interview</p>
+              <p class="text-sm text-gray-600">Product Manager • Due tomorrow</p>
+            </div>
+            <div class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">Low</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Toggle Dropdown JS -->
   <script>
     feather.replace();
 
-    document.getElementById('notifBtn').addEventListener('click', function () {
-      document.getElementById('notifDropdown').classList.toggle('hidden');
-    });
-
-    document.getElementById('profileBtn').addEventListener('click', function () {
-      document.getElementById('profileDropdown').classList.toggle('hidden');
+    // Chart.js Configuration
+    const ctx = document.getElementById('applicationChart').getContext('2d');
+    const applicationChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['LinkedIn', 'Indeed', 'Referrals', 'Company Site', 'Other'],
+            datasets: [{
+                data: [35, 28, 18, 13, 6],
+                backgroundColor: [
+                    '#3B82F6',
+                    '#10B981',
+                    '#F59E0B',
+                    '#EF4444',
+                    '#8B5CF6'
+                ],
+                borderWidth: 0,
+                cutout: '70%'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 12,
+                            weight: '500'
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: '#1F2937',
+                    titleColor: '#F9FAFB',
+                    bodyColor: '#F9FAFB',
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 12 },
+                    padding: 12,
+                    cornerRadius: 8,
+                    callbacks: {
+                        label: function(context) {
+                            return context.label + ': ' + context.parsed + '%';
+                        }
+                    }
+                }
+            }
+        }
     });
   </script>
+
 </body>
 </html>
