@@ -1,7 +1,11 @@
 import mysql.connector
 import os
 from dotenv import load_dotenv
+<<<<<<< HEAD
 import sqlite3
+=======
+
+>>>>>>> 38ca3952210f03e69c56af4b3734e2c395073b4a
 load_dotenv()
 
 def get_db_connection():

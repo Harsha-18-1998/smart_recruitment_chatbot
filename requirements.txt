@@ -29,3 +29,4 @@ python-docx
 pdfminer
 pdfminer.six
 httpx
+Flask-Session
