@@ -13,7 +13,6 @@
     }
 
     window.onload = function() {
-      // On page load, show/hide based on selected radio or hide all
       const selectedChoice = document.querySelector('input[name="choice"]:checked');
       if (selectedChoice) {
         toggleOptions();
@@ -91,8 +90,24 @@
           <hr />
           <h5>Evaluation:</h5>
           <p><strong>Score:</strong> {{ evaluation.score }} / 10</p>
-          <p><strong>Strengths:</strong> {{ evaluation.strengths }}</p>
-          <p><strong>Suggestions:</strong> {{ evaluation.suggestions }}</p>
+
+          {% if evaluation.strengths %}
+          <p><strong>Strengths:</strong></p>
+          <ul>
+            {% for item in evaluation.strengths %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+
+          {% if evaluation.suggestions %}
+          <p><strong>Suggestions:</strong></p>
+          <ul>
+            {% for item in evaluation.suggestions %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
         {% endif %}
       </div>
     </div>
@@ -116,8 +131,24 @@
           {% if feedback[i] %}
             <hr />
             <p><strong>Score:</strong> {{ feedback[i].score }} / 10</p>
-            <p><strong>Strengths:</strong> {{ feedback[i].strengths }}</p>
-            <p><strong>Suggestions:</strong> {{ feedback[i].suggestions }}</p>
+
+            {% if feedback[i].strengths %}
+            <p><strong>Strengths:</strong></p>
+            <ul>
+              {% for item in feedback[i].strengths %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
+
+            {% if feedback[i].suggestions %}
+            <p><strong>Suggestions:</strong></p>
+            <ul>
+              {% for item in feedback[i].suggestions %}
+                <li>{{ item }}</li>
+              {% endfor %}
+            </ul>
+            {% endif %}
           {% endif %}
         </div>
       </div>

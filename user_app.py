@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 from shared.resume_parser import extract_skills, extract_text
 from shared.db_config import get_db_connection
 from shared.chatbot_engine import get_job_info_reply
-from shared.mock_interview_engine import load_questions  
+from shared.mock_interview_engine import load_questions
 from shared.answer_evaluator import evaluate_answer
 from flask_session import Session
 
@@ -218,6 +218,11 @@ def mock_interview():
             flash("No questions found for your selection.")
             return redirect(url_for('mock_interview'))
 
+        # Deduplicate & shuffle to avoid repeats
+        questions = list(dict.fromkeys(questions))
+        import random
+        random.shuffle(questions)
+
         session['mock_role'] = role
         session['mock_subject'] = subject
         session['mock_questions'] = questions
@@ -269,14 +274,21 @@ def mock_interview_question():
             flash("Please provide an answer before continuing.")
             previous_answer = request.form.get('answer', '')
         else:
-            evaluation = evaluate_answer(question, answer)
+            try:
+                evaluation = evaluate_answer(question, answer)
+                # Ensure keys exist
+                evaluation['strengths'] = evaluation.get('strengths', [])[:3] or ["N/A", "N/A", "N/A"]
+                evaluation['suggestions'] = evaluation.get('suggestions', [])[:3] or ["N/A", "N/A", "N/A"]
+                if 'score' not in evaluation:
+                    evaluation['score'] = 0
+            except Exception:
+                evaluation = {'score': 0, 'strengths': ["N/A", "N/A", "N/A"], 'suggestions': ["N/A", "N/A", "N/A"]}
 
             answers.append(answer)
             feedback.append(evaluation)
 
             session['mock_answers'] = answers
             session['mock_feedback'] = feedback
-
             session['mock_index'] = index + 1
 
             return redirect(url_for('mock_interview_question'))

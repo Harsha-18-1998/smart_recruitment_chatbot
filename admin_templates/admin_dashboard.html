@@ -4,11 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard - Smart Recruit</title>
-  
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/feather-icons"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -19,20 +17,17 @@
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
     }
-
     .glass-card {
       backdrop-filter: blur(20px);
       background: rgba(255, 255, 255, 0.1);
       border: 1px solid rgba(255, 255, 255, 0.2);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
     }
-
     .nav-link {
       position: relative;
       overflow: hidden;
       transition: all 0.3s ease;
     }
-
     .nav-link::before {
       content: '';
       position: absolute;
@@ -43,54 +38,23 @@
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
       transition: left 0.5s;
     }
-
     .nav-link:hover::before {
       left: 100%;
     }
-
     .active-nav {
       background: rgba(255, 255, 255, 0.2);
       color: white;
       font-weight: 600;
     }
-
     .stat-card {
       transition: all 0.3s ease;
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(10px);
     }
-
     .stat-card:hover {
       transform: translateY(-8px) scale(1.02);
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
     }
-
-    .chart-container {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-    }
-
-    .task-item {
-      transition: all 0.3s ease;
-      background: rgba(255, 255, 255, 0.9);
-    }
-
-    .task-item:hover {
-      transform: translateX(8px);
-      background: rgba(255, 255, 255, 1);
-    }
-
-    .floating-btn {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-      transition: all 0.3s ease;
-    }
-
-    .floating-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
-    }
-
     .main-content {
       background: rgba(255, 255, 255, 0.05);
       backdrop-filter: blur(20px);
@@ -105,87 +69,40 @@
   <nav class="glass-card sticky top-0 z-50 m-4 rounded-2xl">
     <div class="px-6 py-4">
       <div class="flex items-center justify-between">
-        <!-- Logo -->
         <div class="flex items-center space-x-8">
-          
-            <h3 style="font-size:50px;">Smart Recruitment Chatbot</h3>
-          
-          
-          <!-- Navigation Links -->
+          <h3 style="font-size:50px;">Smart Recruit</h3>
           <div class="hidden md:flex items-center space-x-1">
-            <a href="#" class="nav-link px-4 py-2 rounded-xl text-white active-nav transition-all duration-200">
+            <a href="#" class="nav-link px-4 py-2 rounded-xl text-white active-nav">
               <span class="flex items-center space-x-2">
-                <i data-feather="grid" class="w-4 h-4"></i>
-                <span>Dashboard</span>
+                <i data-feather="grid" class="w-4 h-4"></i><span>Dashboard</span>
               </span>
             </a>
-            <a href="/admin/jobs" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+            <a href="/admin/candidates" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10">
               <span class="flex items-center space-x-2">
-                <i data-feather="briefcase" class="w-4 h-4"></i>
-                <span>Jobs</span>
+                <i data-feather="users" class="w-4 h-4"></i><span>Candidates</span>
               </span>
             </a>
-            <a href="/admin/candidates" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+            <a href="/admin/jobs" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10">
               <span class="flex items-center space-x-2">
-                <i data-feather="users" class="w-4 h-4"></i>
-                <span>Candidates</span>
+                <i data-feather="briefcase" class="w-4 h-4"></i><span>Jobs</span>
               </span>
             </a>
-            <a href="/admin/analytics" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+            <a href="/admin/analytics" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10">
               <span class="flex items-center space-x-2">
-                <i data-feather="pie-chart" class="w-4 h-4"></i>
-                <span>Reports</span>
+                <i data-feather="pie-chart" class="w-4 h-4"></i><span>Analytics</span>
               </span>
             </a>
-            <a href="/admin/communication" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+            <a href="/admin/communication" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10">
               <span class="flex items-center space-x-2">
-                <i data-feather="mail" class="w-4 h-4"></i>
-                <span>Messages</span>
+                <i data-feather="mail" class="w-4 h-4"></i><span>Communication</span>
               </span>
             </a>
-            <a href="/admin/settings" class="nav-link px-4 py-2 rounded-xl text-white/80 hover:text-white hover:bg-white/10 transition-all duration-200">
+            <a href="/admin/logout" class="nav-link px-4 py-2 rounded-xl text-red-300 hover:text-white hover:bg-red-600">
               <span class="flex items-center space-x-2">
-                <i data-feather="settings" class="w-4 h-4"></i>
-                <span>Settings</span>
+                <i data-feather="log-out" class="w-4 h-4"></i><span>Logout</span>
               </span>
             </a>
           </div>
-        </div>
-
-        <!-- Right Side -->
-        <div class="flex items-center space-x-4">
-          <!-- Search -->
-          <div class="relative hidden sm:block">
-            <i data-feather="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60"></i>
-            <input type="text" placeholder="Search..." 
-                   class="w-64 pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-white/30 backdrop-blur-sm">
-          </div>
-
-          <!-- New Job Button -->
-          <button class="floating-btn text-white font-semibold px-6 py-2.5 rounded-xl flex items-center gap-2 transition-all duration-200">
-             <i data-feather="plus-circle" class="w-4 h-4"></i>
-             New Job
-          </button>
-
-          <!-- Notifications -->
-          <button class="text-white/80 hover:text-white focus:outline-none p-2 rounded-xl hover:bg-white/10 transition-all duration-200">
-            <i data-feather="bell" class="w-5 h-5"></i>
-          </button>
-
-          <!-- Profile -->
-          <button class="flex items-center space-x-3 focus:outline-none p-2 rounded-xl hover:bg-white/10 transition-all duration-200">
-            <img src="https://ui-avatars.com/api/?name=Admin+User&background=667eea&color=fff&font-size=0.5" 
-                 class="rounded-full w-8 h-8 ring-2 ring-white/30" />
-            <div class="text-left hidden lg:block">
-              <div class="font-semibold text-white text-sm">Admin User</div>
-              <div class="text-xs text-white/60">admin@example.com</div>
-            </div>
-          </button>
-
-          <!-- Mobile Menu Button -->
-          <button class="md:hidden text-white p-2 rounded-xl hover:bg-white/10">
-            <i data-feather="menu" class="w-5 h-5"></i>
-          </button>
         </div>
       </div>
     </div>
@@ -193,21 +110,28 @@
 
   <!-- Main Content -->
   <div class="main-content mx-4 mb-4 p-8">
-    <!-- Header -->
     <div class="mb-8">
       <h1 class="text-4xl font-bold text-white mb-2">Dashboard Overview</h1>
       <p class="text-white/70">Welcome back! Here's what's happening with your recruitment today.</p>
     </div>
 
     <!-- Stats Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+      
+      <!-- Applicants -->
       <div class="stat-card p-6 rounded-2xl border-l-4 border-blue-500">
         <div class="flex justify-between items-start mb-4">
           <div>
             <span class="text-sm font-semibold text-gray-600">Total Applicants</span>
-            <p class="text-3xl font-bold text-gray-900 mt-1">1,284</p>
+            <p class="text-3xl font-bold text-gray-900 mt-1">{{ total_applicants }}</p>
             <div class="flex items-center mt-2">
-              <span class="text-green-500 text-sm font-medium">↗ 12%</span>
+              {% if applicant_growth > 0 %}
+                <span class="text-green-600 text-sm font-medium">↗ {{ applicant_growth }}%</span>
+              {% elif applicant_growth < 0 %}
+                <span class="text-red-600 text-sm font-medium">↘ {{ applicant_growth }}%</span>
+              {% else %}
+                <span class="text-amber-500 text-sm font-medium">→ 0%</span>
+              {% endif %}
               <span class="text-gray-500 text-sm ml-2">vs last month</span>
             </div>
           </div>
@@ -217,172 +141,55 @@
         </div>
       </div>
 
+      <!-- Job Titles -->
       <div class="stat-card p-6 rounded-2xl border-l-4 border-green-500">
         <div class="flex justify-between items-start mb-4">
           <div>
-            <span class="text-sm font-semibold text-gray-600">Jobs Filled</span>
-            <p class="text-3xl font-bold text-gray-900 mt-1">26</p>
+            <span class="text-sm font-semibold text-gray-600">Job Titles</span>
+            <p class="text-3xl font-bold text-gray-900 mt-1">{{ total_jobs }}</p>
             <div class="flex items-center mt-2">
-              <span class="text-green-500 text-sm font-medium">↗ 8%</span>
+              {% if jobs_growth > 0 %}
+                <span class="text-green-600 text-sm font-medium">↗ {{ jobs_growth }}%</span>
+              {% elif jobs_growth < 0 %}
+                <span class="text-red-600 text-sm font-medium">↘ {{ jobs_growth }}%</span>
+              {% else %}
+                <span class="text-amber-500 text-sm font-medium">→ 0%</span>
+              {% endif %}
               <span class="text-gray-500 text-sm ml-2">vs last month</span>
             </div>
           </div>
           <div class="bg-green-100 p-3 rounded-xl">
-            <i data-feather="check-square" class="text-green-600 w-6 h-6"></i>
+            <i data-feather="briefcase" class="text-green-600 w-6 h-6"></i>
           </div>
         </div>
       </div>
 
-      <div class="stat-card p-6 rounded-2xl border-l-4 border-amber-500">
+      <!-- Interviews -->
+      <div class="stat-card p-6 rounded-2xl border-l-4 border-yellow-500">
         <div class="flex justify-between items-start mb-4">
           <div>
-            <span class="text-sm font-semibold text-gray-600">Pending Interviews</span>
-            <p class="text-3xl font-bold text-gray-900 mt-1">14</p>
+            <span class="text-sm font-semibold text-gray-600">Interviews</span>
+            <p class="text-3xl font-bold text-gray-900 mt-1">{{ total_interviews }}</p>
             <div class="flex items-center mt-2">
-              <span class="text-amber-500 text-sm font-medium">→ 0%</span>
+              {% if interview_growth > 0 %}
+                <span class="text-green-600 text-sm font-medium">↗ {{ interview_growth }}%</span>
+              {% elif interview_growth < 0 %}
+                <span class="text-red-600 text-sm font-medium">↘ {{ interview_growth }}%</span>
+              {% else %}
+                <span class="text-amber-500 text-sm font-medium">→ 0%</span>
+              {% endif %}
               <span class="text-gray-500 text-sm ml-2">vs last month</span>
             </div>
           </div>
-          <div class="bg-amber-100 p-3 rounded-xl">
-            <i data-feather="clock" class="text-amber-600 w-6 h-6"></i>
+          <div class="bg-yellow-100 p-3 rounded-xl">
+            <i data-feather="clock" class="text-yellow-600 w-6 h-6"></i>
           </div>
         </div>
       </div>
 
-      <div class="stat-card p-6 rounded-2xl border-l-4 border-red-500">
-        <div class="flex justify-between items-start mb-4">
-          <div>
-            <span class="text-sm font-semibold text-gray-600">Rejected</span>
-            <p class="text-3xl font-bold text-gray-900 mt-1">102</p>
-            <div class="flex items-center mt-2">
-              <span class="text-red-500 text-sm font-medium">↘ 3%</span>
-              <span class="text-gray-500 text-sm ml-2">vs last month</span>
-            </div>
-          </div>
-          <div class="bg-red-100 p-3 rounded-xl">
-            <i data-feather="x-circle" class="text-red-600 w-6 h-6"></i>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Charts and Tasks -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-      <!-- Chart -->
-      <div class="lg:col-span-2 chart-container p-6 rounded-2xl">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-xl font-bold text-gray-900">Candidates by Source</h3>
-          <div class="flex space-x-2">
-            <button class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm font-medium">This Month</button>
-            <button class="px-3 py-1 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-100">Last Month</button>
-          </div>
-        </div>
-        <div style="height: 350px;">
-           <canvas id="applicationChart"></canvas>
-        </div>
-      </div>
-
-      <!-- Tasks -->
-      <div class="chart-container p-6 rounded-2xl">
-        <div class="flex items-center justify-between mb-6">
-          <h3 class="text-xl font-bold text-gray-900">Today's Tasks</h3>
-          <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded-full text-sm font-medium">4 pending</span>
-        </div>
-        <div class="space-y-4">
-          <div class="task-item flex items-center p-4 rounded-xl border border-gray-200">
-            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-            <div class="ml-4 flex-1">
-              <p class="font-semibold text-gray-900">Review James Smith's portfolio</p>
-              <p class="text-sm text-gray-600">Senior Developer • Due in 2 hours</p>
-            </div>
-            <div class="bg-amber-100 text-amber-600 px-2 py-1 rounded text-xs font-medium">High</div>
-          </div>
-
-          <div class="task-item flex items-center p-4 rounded-xl border border-gray-200">
-            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-            <div class="ml-4 flex-1">
-              <p class="font-semibold text-gray-900">Call Maria Garcia for screening</p>
-              <p class="text-sm text-gray-600">UX Designer • Due today</p>
-            </div>
-            <div class="bg-blue-100 text-blue-600 px-2 py-1 rounded text-xs font-medium">Medium</div>
-          </div>
-
-          <div class="task-item flex items-center p-4 rounded-xl border border-gray-200 opacity-60">
-            <input type="checkbox" checked class="h-5 w-5 rounded border-gray-300 text-gray-600 focus:ring-gray-500">
-            <div class="ml-4 flex-1">
-              <p class="font-semibold text-gray-900 line-through">Finalize job description</p>
-              <p class="text-sm text-gray-600">Marketing Lead • Completed</p>
-            </div>
-            <div class="bg-green-100 text-green-600 px-2 py-1 rounded text-xs font-medium">Done</div>
-          </div>
-
-          <div class="task-item flex items-center p-4 rounded-xl border border-gray-200">
-            <input type="checkbox" class="h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-            <div class="ml-4 flex-1">
-              <p class="font-semibold text-gray-900">Schedule team interview</p>
-              <p class="text-sm text-gray-600">Product Manager • Due tomorrow</p>
-            </div>
-            <div class="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs font-medium">Low</div>
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 
-  <script>
-    feather.replace();
-
-    // Chart.js Configuration
-    const ctx = document.getElementById('applicationChart').getContext('2d');
-    const applicationChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: ['LinkedIn', 'Indeed', 'Referrals', 'Company Site', 'Other'],
-            datasets: [{
-                data: [35, 28, 18, 13, 6],
-                backgroundColor: [
-                    '#3B82F6',
-                    '#10B981',
-                    '#F59E0B',
-                    '#EF4444',
-                    '#8B5CF6'
-                ],
-                borderWidth: 0,
-                cutout: '70%'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        padding: 20,
-                        font: {
-                            size: 12,
-                            weight: '500'
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: '#1F2937',
-                    titleColor: '#F9FAFB',
-                    bodyColor: '#F9FAFB',
-                    titleFont: { size: 14, weight: 'bold' },
-                    bodyFont: { size: 12 },
-                    padding: 12,
-                    cornerRadius: 8,
-                    callbacks: {
-                        label: function(context) {
-                            return context.label + ': ' + context.parsed + '%';
-                        }
-                    }
-                }
-            }
-        }
-    });
-  </script>
-
+  <script>feather.replace();</script>
 </body>
 </html>
