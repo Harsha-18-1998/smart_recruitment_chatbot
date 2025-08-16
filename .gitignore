@@ -36,3 +36,5 @@ build/
 
 # Database credentials (optional)
 db_config.py
+
+resume.html
