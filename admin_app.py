@@ -426,46 +426,52 @@ def admin_communication():
     cursor = conn.cursor(dictionary=True)
 
     if request.method == 'POST':
-        recipient = request.form['recipient']
-        subject = request.form['subject']
-        body = request.form['body']
+        recipient = request.form.get('recipient')
+        subject = request.form.get('subject')
+        body = request.form.get('body')
+
+        sender = os.getenv("EMAIL_SENDER")
+        password = os.getenv("EMAIL_PASSWORD")
+
+        if not sender or not password:
+            flash("Email credentials are missing in the environment variables.", "danger")
+            return redirect(url_for('admin_communication'))
 
         try:
-            # Read environment variables for sender email and app password
-            sender = os.getenv("EMAIL_SENDER")
-            password = os.getenv("EMAIL_PASSWORD")
-
-            # Prepare and send email
+            # Compose the email
             msg = EmailMessage()
             msg['Subject'] = subject
             msg['From'] = sender
             msg['To'] = recipient
             msg.set_content(body)
 
+            # Send the email using SMTP
             with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
                 smtp.login(sender, password)
                 smtp.send_message(msg)
 
-            # Store message in database
-            cursor.execute("""
+            # Store message in DB
+            cursor.execute(
+                """
                 INSERT INTO messages (sender_email, receiver_email, subject, content, sent_at)
-                VALUES (%s, %s, %s, %s, %s)
-            """, (sender, recipient, subject, body, datetime.now()))
+                VALUES (%s, %s, %s, %s, NOW())
+                """,
+                (sender, recipient, subject, body)
+            )
             conn.commit()
-
-            flash('✅ Email sent successfully!', 'success')
+            flash("✅ Email sent successfully!", "success")
 
         except Exception as e:
-            flash(f'❌ Failed to send email: {str(e)}', 'danger')
+            flash(f"❌ Failed to send email: {str(e)}", "danger")
 
-    # Fetch and display messages in reverse chronological order
+    # Fetch recent messages
     cursor.execute("SELECT * FROM messages ORDER BY sent_at DESC")
     messages = cursor.fetchall()
 
     cursor.close()
     conn.close()
 
-    return render_template('admin_communication.html', messages=messages)
+    return render_template("admin_communication.html", messages=messages)
 
 
 
